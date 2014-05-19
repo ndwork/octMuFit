@@ -44,7 +44,7 @@ function runMuFit1D
 %     mask(1:skinLoc-1) = zeros(skinLoc-1, 1);
 
 
-%   % eliminate all data before skin location
+  % eliminate all data before skin location
   I = I(skinLoc:end);
   z = z(skinLoc:end);
   if numel(trueMu)>0 trueMu = trueMu(skinLoc:end); end;
@@ -53,14 +53,11 @@ function runMuFit1D
   mask = ones( size(I) );
 
 
-%   eta = 1d5;
   eta = 1d-2;
   I = I.*mask;
   muStar = muFitCVX( I, mask, z, z0, zR, eta );
-  %load 'muStar.mat';
   muFit = muStar;
   tic
-  
   %[muFit, fos, relFos] = muFit1D_CP( I, mask, z, z0, zR, eta, muStar );
   %[muFit, fos, relFos] = muFit1D_CP2( I, mask, z, z0, zR, eta, muStar );
   %[muFit, fos, relFos] = muFit1D_LADMM(I, mask, z, z0, zR, eta, muStar );

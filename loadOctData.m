@@ -21,7 +21,7 @@ function [I, z, dx, z0, zR, alpha, beta, L0, trueMu] = ...
           dx = 13d-3;
           imgDepth = 2.57;
           numPix = 512;
-          datafileParts = {'.','20140428','low'};
+          datafileParts = {'..','20140428','low'};
           cols2Del = 1:52;
       case 2 %High
           z0 = 1; %(mm)
@@ -29,7 +29,7 @@ function [I, z, dx, z0, zR, alpha, beta, L0, trueMu] = ...
           dx = 13d-3;
           imgDepth = 2.57;
           numPix = 512;
-          datafileParts = {'.','20140428','high'};
+          datafileParts = {'..','20140428','high'};
           cols2Del = 1:52;
       case 3 %Layered regular
           z0 = 1; %(mm)
@@ -37,7 +37,7 @@ function [I, z, dx, z0, zR, alpha, beta, L0, trueMu] = ...
           dx = 13d-3;
           imgDepth = 2.57;
           numPix = 512;
-          datafileParts = {'.','20140428','layered', 'regular'};
+          datafileParts = {'..','20140428','layered', 'regular'};
           cols2Del = 1:52;
           rows2Del = 1:25;
       case 4 %Layered bladder
@@ -46,7 +46,7 @@ function [I, z, dx, z0, zR, alpha, beta, L0, trueMu] = ...
           dx = 13d-3;
           imgDepth = 2.57;
           numPix = 512;
-          datafileParts = {'.','20140428','layered', 'bladder'};
+          datafileParts = {'..','20140428','layered', 'bladder'};
           cols2Del = 1:52;
       otherwise
           error('Invalid data case');        
