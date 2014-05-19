@@ -7,7 +7,6 @@ function runMuFit1D
 
   dataCase = 3;
   [I, z, dx, z0, zR, muAlpha, muBeta, muL0, trueMu ] = loadOctData( dataCase, false );
-  
 
 
   switch dataCase
@@ -53,7 +52,7 @@ function runMuFit1D
   mask = ones( size(I) );
 
 
-  eta = 1d-2;
+  eta = 1d5;
   I = I.*mask;
   muStar = muFitCVX( I, mask, z, z0, zR, eta );
   muFit = muStar;
