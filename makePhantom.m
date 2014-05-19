@@ -3,7 +3,7 @@ function [I, z, z0, zR, alpha, beta, L0, trueMu] = makePhantom()
 
   alpha = 0.2;
   beta = 1.0;
-  L0 = 1.0;
+  L0 = 2000;
   z0 = 0.6;
   zR = 0.1;
   maxZ = 2;
