@@ -13,9 +13,9 @@ function [mu, fos, relFos] = muFit1D_ADMM(I, mask, z, z0, zR, eta, muStar )
   tmp = (z-z0)/zR;
   g = 1 ./ sqrt( tmp.^2 + 1 );
 
-  A = makeA_1D( I, dz, g );
-  D = makeD_1D( M, mask, dz);
-  b = makeb(I);
+  A = makeA_1D( I, dz, g, mask );
+  D = makeD_1D( M, mask, dz );
+  b = makeb( I, mask );
 
   u = zeros(M,1);
   y = zeros(2*M,1);
@@ -47,7 +47,7 @@ function [mu, fos, relFos] = muFit1D_ADMM(I, mask, z, z0, zR, eta, muStar )
                         Dgamma + 1/rho*lambda2(M+1:end), b, 1/rho, eta);
     y = [ y1; y2 ];
 
-    u = proxG(gamma + 1/rho*lambda1);
+    u = proxG(gamma + 1/rho*lambda1, mask);
 
     lambda1 = lambda1 + rho*(gamma - u);
     lambda2(1:M) = lambda2(1:M) + rho*(Agamma-y1);

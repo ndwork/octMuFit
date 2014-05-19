@@ -1,4 +1,4 @@
-function b = makeb(I)
+function b = makeb(I,mask)
 
   nDimI = ndims(I);
 
@@ -6,10 +6,16 @@ function b = makeb(I)
     case 1
       m = length(I);
       ut = triu(ones(m-1, m-1));
+      utMask = repmat(mask(1:m-1)', [m-1, 1]);
+      ut = ut.*utMask;
+      ut = ut.*utMask';
       b = makeb1D(I, ut);
     case 2
       [m, ~] = size(I);
       ut = triu(ones(m-1, m-1));
+      utMask = repmat(mask(1:m-1)', [m-1, 1]);
+      ut = ut.*utMask;
+      ut = ut.*utMask';
       b = makeb2D(I, ut);
     case 3
       [m, ~, ~] = size(I);

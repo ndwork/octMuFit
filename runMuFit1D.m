@@ -37,8 +37,12 @@ function runMuFit1D
       I = mean( I, 2 );
     end
   end
-  
-  mask = findNonZeroMus(I);
+
+  if dataCase == 0
+    mask = ones( numel(I), 1 );
+  else
+    mask = findNonZeroMus(I);
+  end
 
 
   % eliminate all data before skin location
@@ -53,12 +57,12 @@ function runMuFit1D
   eta = 1d5;
   I = I.*mask;
   muStar = muFitCVX( I, mask, z, z0, zR, eta );
-  muFit = muStar;
+  %muFit = muStar;
   tic
   %[muFit, fos, relFos] = muFit1D_CP( I, mask, z, z0, zR, eta, muStar );
   %[muFit, fos, relFos] = muFit1D_CP2( I, mask, z, z0, zR, eta, muStar );
   %[muFit, fos, relFos] = muFit1D_LADMM(I, mask, z, z0, zR, eta, muStar );
-%   [muFit, fos, relFos] = muFit1D_ADMM(I, mask, z, z0, zR, eta, muStar );
+  [muFit, fos, relFos] = muFit1D_ADMM(I, mask, z, z0, zR, eta, muStar );
   timeTaken = toc;
   disp(['Time taken: ', num2str(timeTaken)]);
   if exist('fos')
