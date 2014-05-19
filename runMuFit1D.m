@@ -40,17 +40,17 @@ function runMuFit1D
   end
   
 % %   mask = findNonZeroMus(I);
-%     mask = ones(numel(I), 1);
-%     mask(1:skinLoc-1) = zeros(skinLoc-1, 1);
+    mask = ones(numel(I), 1);
+    mask(1:skinLoc-1) = zeros(skinLoc-1, 1);
 
 
   % eliminate all data before skin location
-  I = I(skinLoc:end);
-  z = z(skinLoc:end);
-  if numel(trueMu)>0 trueMu = trueMu(skinLoc:end); end;
+%   I = I(skinLoc:end);
+%   z = z(skinLoc:end);
+%   if numel(trueMu)>0 trueMu = trueMu(skinLoc:end); end;
   I = I - noiseLevel;
   I = max( I, 0 );
-  mask = ones( size(I) );
+%   mask = ones( size(I) );
 
 
   eta = 1d-2;
@@ -61,7 +61,7 @@ function runMuFit1D
   %[muFit, fos, relFos] = muFit1D_CP( I, mask, z, z0, zR, eta, muStar );
   %[muFit, fos, relFos] = muFit1D_CP2( I, mask, z, z0, zR, eta, muStar );
   %[muFit, fos, relFos] = muFit1D_LADMM(I, mask, z, z0, zR, eta, muStar );
-  [muFit, fos, relFos] = muFit1D_ADMM(I, mask, z, z0, zR, eta, muStar );
+%   [muFit, fos, relFos] = muFit1D_ADMM(I, mask, z, z0, zR, eta, muStar );
   timeTaken = toc;
   disp(['Time taken: ', num2str(timeTaken)]);
   if exist('fos')
