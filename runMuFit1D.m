@@ -38,9 +38,7 @@ function runMuFit1D
     end
   end
   
-% %   mask = findNonZeroMus(I);
-    mask = ones(numel(I), 1);
-    mask(1:skinLoc-1) = zeros(skinLoc-1, 1);
+  mask = findNonZeroMus(I);
 
 
   % eliminate all data before skin location
