@@ -30,7 +30,7 @@ function [mu, fos, relFos] = muFit1D_ADMM(I, mask, z, z0, zR, eta, muStar )
 
   for n=1:nIter
     if mod(n,50)==0 disp(['1D ADMM iteration: ', num2str(n)]); end;
-    fos(n) = objFunction(gamma, I, dz, g, D, eta);
+    fos(n) = objFunction(gamma, I, mask, dz, g, D, eta);
 
     gamma = IKtK \ ( u + K'*y - 1/rho*lambda1 - 1/rho*K'*lambda2 );
     %if( n > 1 )
@@ -60,7 +60,7 @@ function [mu, fos, relFos] = muFit1D_ADMM(I, mask, z, z0, zR, eta, muStar )
   mu( muZeroIndxs ) = 0;
 
   % convert fos to relative errors
-  fStar = objFunction(1./muStar, I, dz, g, D, eta);
+  fStar = objFunction(1./muStar, I, mask, dz, g, D, eta);
   relFos = ( fos - fStar ) / fStar;
 
 end
