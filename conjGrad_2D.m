@@ -33,13 +33,13 @@ function [gamma] = conjGrad_2D( gammaGuess, I, z, dz, dx, z0, zR, u, yA, yDz, yD
     
     w = p + KtKp;    % w = (I + K'*K)*p
     
-    alpha = rho(2)/(p'*w); % alpha = rho_{k-1} / (p'*w)
+    alpha = rho(2)/(p(:)'*w(:)); % alpha = rho_{k-1} / (p'*w)
     
     gamma = gamma + alpha*p;
     
      r = r - alpha*w;
     
-    rho(3)= r'*r;   % rho_k = r'*r
+    rho(3)= r(:)'*r(:);   % rho_k = r'*r
     
     rho = circshift(rho, [0, -1] );  % shift the rhos up so that we can update rho_k in the next iteration    
     
