@@ -4,8 +4,8 @@ function [mu, fos, relFos] = muFit1D_ADMM(I, mask, z, z0, zR, eta, muStar )
   fos = [];
   relFos = [];
 
-  rho = 10;
-  nIter = 2000;
+  rho = 0.001;
+  nIter = 400;
 
   M = numel(I);
   dz = z(2) - z(1);
@@ -13,7 +13,7 @@ function [mu, fos, relFos] = muFit1D_ADMM(I, mask, z, z0, zR, eta, muStar )
   tmp = (z-z0)/zR;
   g = 1 ./ sqrt( tmp.^2 + 1 );
 
-  A = makeA_1D( I, dz, g );
+  %A = makeA_1D( I, dz, g );
   D = makeD_1D( M, dz );
   b = makeb( I );
 
@@ -24,9 +24,9 @@ function [mu, fos, relFos] = muFit1D_ADMM(I, mask, z, z0, zR, eta, muStar )
   lambda2 = zeros(2*M,1);
 
   fos = zeros(nIter,1);
-  
-  K = [A; D];
-  IKtK = eye(M) + K'*K;
+
+  %K = [A; D];
+  %IKtK = eye(M) + K'*K;
 
   for n=1:nIter
     if mod(n,50)==0 disp(['1D ADMM iteration: ', num2str(n)]); end;
@@ -56,8 +56,7 @@ function [mu, fos, relFos] = muFit1D_ADMM(I, mask, z, z0, zR, eta, muStar )
   end
 
   mu = 1 ./ gamma;
-  muZeroIndxs = find( mask==0 );
-  mu( muZeroIndxs ) = 0;
+  mu( mask==0 ) = 0;
 
   % convert fos to relative errors
   fStar = objFunction(1./muStar, I, mask, dz, g, D, eta);

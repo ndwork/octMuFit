@@ -9,26 +9,6 @@ function runMuFit1D
   %[I, z, dx, z0, zR, muAlpha, muBeta, muL0, trueMu ] = loadOctData( dataCase, false );
 load 'data.mat';
 
-
-  switch dataCase
-    case 0
-      skinLoc = 1;
-      %skinLoc = 11;
-      noiseLevel = 0;
-    case 1
-      skinLoc = 180;
-      noiseLevel = 10^(45/20);
-    case 2
-      skinLoc = 200;
-      noiseLevel = 10^(45/20);
-    case 3
-      skinLoc = 160;
-      noiseLevel = 10^(40/20);
-    case 4
-      skinLoc = 165;
-      noiseLevel = 10^(45/20);
-  end
-
   if ~isvector(I)
     if dataCase==0
       trueMu = trueMu(:,1);
@@ -45,15 +25,9 @@ load 'data.mat';
     mask = findNonZeroMus(I);
   end
 
-
-  % eliminate all data before skin location
-%   I = I(skinLoc:end);
-%   z = z(skinLoc:end);
-%   if numel(trueMu)>0 trueMu = trueMu(skinLoc:end); end;
+  noiseLevel = median( I(mask==0) );
   I = I - noiseLevel;
   I = max( I, 0 );
-%   mask = ones( size(I) );
-
 
   eta = 1d5;
   I = I.*mask;

@@ -4,8 +4,7 @@ function out = objFunction(gam,I,mask,dz,g,D,eta)
   m = numel(I);
   ut = triu( ones(m-1,m-1) );
 
-  zeroMuIndxs = find( mask == 0 );
-  gam( zeroMuIndxs ) = 0;
+  gam( mask == 0 ) = 0;
   
   out = 0.5 * sum( ...
            ... % Integrate from z to D
