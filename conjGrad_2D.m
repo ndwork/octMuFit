@@ -37,7 +37,7 @@ function [gamma] = conjGrad_2D( gammaGuess, I, z, dz, dx, z0, zR, u, yA, yDz, yD
     
     gamma = gamma + alpha*p;
     
-     r = r - alpha*w;
+    r = r - alpha*w;
     
     rho(3)= r(:)'*r(:);   % rho_k = r'*r
     

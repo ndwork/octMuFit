@@ -1,7 +1,7 @@
 
 function mu = muFit2D_ADMM(I, mask, z, dx, z0, zR, eta )
 
-  rho = 100;
+  rho = 10;
   nIter = 2000;
 
   [M N] = size(I);
@@ -19,7 +19,7 @@ function mu = muFit2D_ADMM(I, mask, z, dx, z0, zR, eta )
   lambda2 = zeros(3*M,N);
 
   for n=1:nIter
-    if mod(n,50)==0 disp(['2D ADMM iteration: ', num2str(n)]); end;
+    if mod(n,2)==0 disp(['2D ADMM iteration: ', num2str(n)]); end;
 
     if( n > 1 )
       gamma = conjGrad_2D(gamma, I, z, dz, dx, z0, zR, u, y(1:M, :), ...
