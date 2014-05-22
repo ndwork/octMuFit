@@ -1,7 +1,7 @@
-function [gamma] = conjGrad_1D( gammaGuess, mask, I, z, dz, z0, zR, u, yA, yDz, sysRho, lambda1, lambda2A, lambda2Dz)
+function [gamma] = conjGrad_1D( gammaGuess, I, z, dz, z0, zR, u, yA, yDz, sysRho, lambda1, lambda2A, lambda2Dz)
   
-  adjKy = applyAdjointK1D(yA, yDz, I, mask, z, dz, z0, zR);
-  adjKlambda2 = applyAdjointK1D(lambda2A, lambda2Dz, I, mask, z, dz, z0, zR);
+  adjKy = applyAdjointK1D(yA, yDz, I, z, dz, z0, zR);
+  adjKlambda2 = applyAdjointK1D(lambda2A, lambda2Dz, I, z, dz, z0, zR);
   
   b = u + adjKy - (lambda1/sysRho) - (1/sysRho)*(adjKlambda2);
     
@@ -17,8 +17,8 @@ function [gamma] = conjGrad_1D( gammaGuess, mask, I, z, dz, z0, zR, u, yA, yDz, 
     %gamma = zeros(numel(r), 1);
   else
     gamma = gammaGuess;
-    [KgammaA, KgammaDz] = applyK1D(gamma, mask, I, z, dz, z0, zR);
-    KtKgamma = applyAdjointK1D(KgammaA, KgammaDz, I, mask, z, dz, z0, zR);
+    [KgammaA, KgammaDz] = applyK1D(gamma, I, z, dz, z0, zR);
+    KtKgamma = applyAdjointK1D(KgammaA, KgammaDz, I, z, dz, z0, zR);
     r = b - ident*gamma - KtKgamma;
   end
   rho = [Inf r'*r 0];  %rho[k-2 k-1 k]
@@ -34,8 +34,8 @@ function [gamma] = conjGrad_1D( gammaGuess, mask, I, z, dz, z0, zR, u, yA, yDz, 
       p = r + (rho(2)/rho(1))*p;  % p = r + (rho_{k-1} / rho_{k-2})*p
     end
     
-    [KpA, KpDz] = applyK1D(p, mask, I, z, dz, z0, zR);
-    KtKp = applyAdjointK1D(KpA, KpDz, I, mask, z, dz, z0, zR);
+    [KpA, KpDz] = applyK1D(p, I, z, dz, z0, zR);
+    KtKp = applyAdjointK1D(KpA, KpDz, I, z, dz, z0, zR);
     
     w = ident*p + KtKp;    % w = (I + K'*K)*p
     

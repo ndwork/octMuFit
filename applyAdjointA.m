@@ -1,5 +1,5 @@
 
-function out = applyAdjointA( y, mask, I, z, dz, z0, zR )
+function out = applyAdjointA( y, I, z, dz, z0, zR )
 
   s = size(I);
   ndimsI = sum( s > 1 );
@@ -9,11 +9,11 @@ function out = applyAdjointA( y, mask, I, z, dz, z0, zR )
 
   switch ndimsI
     case 1 
-      out = applyAdjA1D( y, mask, I, dz, g );
+      out = applyAdjA1D( y, I, dz, g );
     case 2
-      out = applyAdjA2D( y, mask, I, dz, g );
+      out = applyAdjA2D( y, I, dz, g );
     case 3
-      out = applyAdjA3D( y, mask, I, dz, g );
+      out = applyAdjA3D( y, I, dz, g );
     otherwise
       error('improper use of applyA');
   end
@@ -22,25 +22,25 @@ end
 
 
 
-function out = applyAdjA3D( y, mask, I, dz, g )
+function out = applyAdjA3D( y, I, dz, g )
   [M N K] = size( I );
   out = zeros([M N K]);
   for i=1:N
     for j=1:K
-      out(:,i,j) = applyAdjA1D( y, mask(:,i,j), I(:,i,j), dz, g );
+      out(:,i,j) = applyAdjA1D( y, I(:,i,j), dz, g );
     end
   end
 end
 
-function out = applyAdjA2D( y, mask, I, dz, g )
+function out = applyAdjA2D( y, I, dz, g )
   [M N] = size(I);
   out = zeros( M, N );
   for i=1:N
-    out(:,i) = applyAdjA1D( y(:,i), mask(:,i), I(:,i), dz, g );
+    out(:,i) = applyAdjA1D( y(:,i), I(:,i), dz, g );
   end
 end
 
-function out = applyAdjA1D( y, mask, I, dz, g )
+function out = applyAdjA1D( y, I, dz, g )
   M = numel(I);
   out = zeros(M,1);
 
@@ -52,7 +52,6 @@ function out = applyAdjA1D( y, mask, I, dz, g )
   
   out(M) = -I(M)/(2*dz)*cumsumY(M-1);
   
-  out = mask .* out;
 end
 
 

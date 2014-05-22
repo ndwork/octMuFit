@@ -1,5 +1,5 @@
 
-function adjKy = applyAdjointK1D( yA, yDz, I, mask, z, dz, z0, zR )
+function adjKy = applyAdjointK1D( yA, yDz, I, z, dz, z0, zR )
 
 
   tmp = (z-z0)/zR;
@@ -13,8 +13,8 @@ function adjKy = applyAdjointK1D( yA, yDz, I, mask, z, dz, z0, zR )
   %adjDzY = D'*yDz;
 
 
-  adjAY = applyAdjointA( yA, mask, I, z, dz, z0, zR );
-  adjDzY = applyAdjointD( yDz, mask, dz, 1 );
+  adjAY = applyAdjointA( yA, I, z, dz, z0, zR );
+  adjDzY = applyAdjointD( yDz, dz, 1 );
 
   adjKy = adjAY + adjDzY;
 end

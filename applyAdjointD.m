@@ -1,15 +1,11 @@
 
-function out = applyAdjointD(y, mask, delta, dim)
+function out = applyAdjointD(y, delta, dim)
   % Apply Adjoint of D
   % Input: y  vector/matrix to apply adjoint of D to
-  %        mask   vector/matrix indicating 1 where mu is nonzero
   %        dz     pixel resolution
   %        dim    dimension of y to apply adjoint of D to
 
   nDimsy = ndims(y);
-  if(nDimsy ~= ndims(mask))
-      error('y and mask size mismatch');
-  end
 
   if (dim > nDimsy)
       error('Dimension argument is too large')
@@ -19,7 +15,6 @@ function out = applyAdjointD(y, mask, delta, dim)
     case 1 %Applying AdjointD in the z direction
     case 2 %Applying AdjointD in the x direction
       y = y';
-      mask = mask';
     case 3 %Appyling AdjointD in the y direction
       error('Applying AdjointD in the third dimension is not supported yet')
     otherwise
@@ -29,11 +24,11 @@ function out = applyAdjointD(y, mask, delta, dim)
 
   switch nDimsy
     case 1
-      out = applyAdjointD1D(y, mask, delta);
+      out = applyAdjointD1D(y, delta);
     case 2
-      out = applyAdjointD2D(y, mask, delta);
+      out = applyAdjointD2D(y, delta);
     case 3
-      out = applyAdjointD3D(y, mask, delta);
+      out = applyAdjointD3D(y, delta);
     otherwise
       errror('Improper size of y');
   end
@@ -51,29 +46,29 @@ function out = applyAdjointD(y, mask, delta, dim)
 end
 
 
-function out = applyAdjointD1D(y, mask, delta)
+function out = applyAdjointD1D(y, delta)
 
   M = length(y);
-  D = makeD_1D(M, mask, delta);
+  D = makeD_1D(M, delta);
   out = ((D')*y);
 
 end
 
-function out = applyAdjointD2D(y, mask, delta)
+function out = applyAdjointD2D(y, delta)
   [M N] = size(y);
   out = zeros(M, N);
   
   for i = 1:N
-    out(:,i) = applyAdjointD1D(y(:,i), mask(:,i), delta);
+    out(:,i) = applyAdjointD1D(y(:,i), delta);
   end
 end
 
-function out = applyAdjointD3D(y, mask, delta)
+function out = applyAdjointD3D(y, delta)
     [M N P] = size(y);
     out = zeros(M, N, P);
     for i = 1:N
         for j = 1:M
-            out(:, i, j) = applyAdjointD1D(y(:, i, j), mask(:,i, j), delta);
+            out(:, i, j) = applyAdjointD1D(y(:, i, j), delta);
         end
     end
 end
