@@ -6,15 +6,22 @@ function runMuFit2D
   muAlpha = 0;    % Note, if we know true value than problem is better
 
   dataCase = 3;
-  [I, z, dx, z0, zR, muAlpha, muBeta, muL0, trueMu ] = loadOctData( dataCase, false );
+  %[I, z, dx, z0, zR, muAlpha, muBeta, muL0, trueMu ] = loadOctData( dataCase, false );
+load 'data.mat';
+  
+  I = I(:,150:200);
   
   mask = findNonZeroMus(I);
 
+  I = I .* mask;
   noiseLevel = median( I( mask==0 ) );
   I = max( I - noiseLevel, 0 );
 
-  muFit = muFit2D_ADMM(I, mask, z, z0, zR, eta, muStar );
+  eta = 1d5;
+  muFit = muFit2D_ADMM(I, mask, z, dx, z0, zR, eta );
 
+  imshow( muFit, [0 4.5] );
+  
 end
 
 
