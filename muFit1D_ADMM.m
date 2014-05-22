@@ -32,7 +32,7 @@ function [mu, fos, relFos] = muFit1D_ADMM(I, mask, z, z0, zR, eta, muStar )
     if mod(n,50)==0 disp(['1D ADMM iteration: ', num2str(n)]); end;
     fos(n) = objFunction(gamma, I, mask, dz, g, D, eta);
 
-    gamma = IKtK \ ( u + K'*y - 1/rho*lambda1 - 1/rho*K'*lambda2 );
+    %gamma = IKtK \ ( u + K'*y - 1/rho*lambda1 - 1/rho*K'*lambda2 );
     if( n > 1 )
       gamma = conjGrad_1D(gamma, I, z, dz, z0, zR, u, y(1:M), ...
         y(M+1:end), rho, lambda1, lambda2(1:M), lambda2(M+1:end));
@@ -46,7 +46,7 @@ function [mu, fos, relFos] = muFit1D_ADMM(I, mask, z, z0, zR, eta, muStar )
     [y1, y2] = proxF1D( Agamma + 1/rho*lambda2(1:M), ...
                         Dgamma + 1/rho*lambda2(M+1:end), ...
                         mask, b, 1/rho, eta);
-    y = [ y1; y2 ];
+    %y = [ y1; y2 ];
 
     u = proxG(gamma + 1/rho*lambda1, mask);
 
