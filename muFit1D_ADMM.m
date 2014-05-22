@@ -4,7 +4,7 @@ function [mu, fos, relFos] = muFit1D_ADMM(I, mask, z, z0, zR, eta, muStar )
   fos = [];
   relFos = [];
 
-  rho = 100;
+  rho = 10;
   nIter = 2000;
 
   M = numel(I);

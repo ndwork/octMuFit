@@ -6,7 +6,8 @@ function runMuFit1D
   muAlpha = 0;    % Note, if we know true value than problem is better
 
   dataCase = 3;
-  [I, z, dx, z0, zR, muAlpha, muBeta, muL0, trueMu ] = loadOctData( dataCase, false );
+  %[I, z, dx, z0, zR, muAlpha, muBeta, muL0, trueMu ] = loadOctData( dataCase, false );
+load 'data.mat';
 
 
   switch dataCase
@@ -56,7 +57,8 @@ function runMuFit1D
 
   eta = 1d5;
   I = I.*mask;
-  muStar = muFitCVX( I, mask, z, z0, zR, eta );
+  %muStar = muFitCVX( I, mask, z, z0, zR, eta );
+load 'muStar.mat';
   %muFit = muStar;
   tic
   %[muFit, fos, relFos] = muFit1D_CP( I, mask, z, z0, zR, eta, muStar );
