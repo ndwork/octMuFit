@@ -33,10 +33,10 @@ function [mu, fos, relFos] = muFit1D_ADMM(I, mask, z, z0, zR, eta, muStar )
     fos(n) = objFunction(gamma, I, mask, dz, g, D, eta);
 
     gamma = IKtK \ ( u + K'*y - 1/rho*lambda1 - 1/rho*K'*lambda2 );
-    %if( n > 1 )
-    %  gamma = conjGrad_1D(gamma, mask, I, z, dz, z0, zR, u, y(1:M), ...
-    %    y(M+1:end), rho, lambda1, lambda2(1:M), lambda2(M+1:end));
-    %end
+    if( n > 1 )
+      gamma = conjGrad_1D(gamma, I, z, dz, z0, zR, u, y(1:M), ...
+        y(M+1:end), rho, lambda1, lambda2(1:M), lambda2(M+1:end));
+    end
 
     %Agamma = A*gamma;
     %Dgamma = D*gamma;
