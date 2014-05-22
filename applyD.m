@@ -17,16 +17,18 @@ function out = applyD(gamma, delta, dim)
       error('Bad dimension argument')
   end
 
+  out = zeros( size(gamma) );
   switch nDimsGamma
     case 1
-      out = applyD1D(gamma, delta);
+      out(1:end-1) = ( gamma(2:end)-gamma(1:end-1) );
     case 2
-      out = applyD2D(gamma, delta);
+      out(1:end-1,:) = ( gamma(2:end,:) - gamma(1:end-1,:) );
     case 3
-      out = applyD3D(gamma, delta);
+      out(1:end-1,:,:) = ( gamma(2:end,:,:) - gamma(1:end-1,:,:) );
     otherwise
       error('Inproper size of gamma');            
   end
+  out = out ./ delta;
 
   switch dim
     case 1 %Applying D in the z direction
@@ -40,26 +42,4 @@ function out = applyD(gamma, delta, dim)
 
 end
 
-function out = applyD3D(gamma, delta)
-  [M N P] = size(gamma);
-  out = zeros(M, N, P);
-  for i = 1:N
-    for j = 1:M
-      out(:, i, j) = applyD1D(gamma(:, i, j), delta);
-    end
-  end
-end
-
-function out = applyD2D(gamma, delta)
-  [M N] = size(gamma);
-  out = zeros(M, N);
-  for i = 1:N
-    out(:,i) = applyD1D(gamma(:,i), delta);
-  end
-end
-
-function out  = applyD1D(gamma, delta)
-  out = zeros( numel(gamma), 1 );
-  out(1:end-1) = ( gamma(2:end)-gamma(1:end-1) ) ./ delta;
-end
 

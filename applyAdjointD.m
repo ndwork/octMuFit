@@ -11,7 +11,7 @@ function out = applyAdjointD(y, delta, dim)
       error('Dimension argument is too large')
   end
 
-   switch dim
+  switch dim
     case 1 %Applying AdjointD in the z direction
     case 2 %Applying AdjointD in the x direction
       y = y';
@@ -22,16 +22,24 @@ function out = applyAdjointD(y, delta, dim)
   end
 
 
+  out = zeros(size(y));
   switch nDimsy
     case 1
-      out = applyAdjointD1D(y, delta);
+      out(1) = -y(1);
+      out(end) = y(end-1);
+      out(2:end-1) = y(1:end-2) - y(2:end-1);
     case 2
-      out = applyAdjointD2D(y, delta);
+      out(1,:) = -y(1,:);
+      out(end,:) = y(end-1,:);
+      out(2:end-1,:) = y(1:end-2,:) - y(2:end-1,:);
     case 3
-      out = applyAdjointD3D(y, delta);
+      out(1,:,:) = -y(1,:,:);
+      out(end,:,:) = y(end-1,:,:);
+      out(2:end-1,:,:) = y(1:end-2,:,:) - y(2:end-1,:,:);
     otherwise
       errror('Improper size of y');
   end
+  out = out ./ delta;
   
   switch dim
     case 1 %Applying AdjointD in the z direction
@@ -45,33 +53,6 @@ function out = applyAdjointD(y, delta, dim)
 
 end
 
-
-function out = applyAdjointD1D(y, delta)
-
-  M = length(y);
-  D = makeD_1D(M, delta);
-  out = ((D')*y);
-
-end
-
-function out = applyAdjointD2D(y, delta)
-  [M N] = size(y);
-  out = zeros(M, N);
-  
-  for i = 1:N
-    out(:,i) = applyAdjointD1D(y(:,i), delta);
-  end
-end
-
-function out = applyAdjointD3D(y, delta)
-    [M N P] = size(y);
-    out = zeros(M, N, P);
-    for i = 1:N
-        for j = 1:M
-            out(:, i, j) = applyAdjointD1D(y(:, i, j), delta);
-        end
-    end
-end
 
 
 
