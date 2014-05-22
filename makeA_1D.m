@@ -1,5 +1,5 @@
 
-function A = makeA_1D( I, dz, g, mask )
+function A = makeA_1D( I, dz, g )
 
   M = numel(I);
 
@@ -17,9 +17,5 @@ function A = makeA_1D( I, dz, g, mask )
       A(i,j) = 1/(2*dz) * I(j) * Lg(j);
     end
   end
-
-  utMask = repmat(mask', [M, 1]);
-  A = A .* utMask;
-  A = A .* utMask';
   
 end

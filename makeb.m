@@ -1,4 +1,4 @@
-function b = makeb(I,mask)
+function b = makeb(I)
 
   nDimI = ndims(I);
 
@@ -6,16 +6,10 @@ function b = makeb(I,mask)
     case 1
       m = length(I);
       ut = triu(ones(m-1, m-1));
-      utMask = repmat(mask(1:m-1)', [m-1, 1]);
-      ut = ut.*utMask;
-      ut = ut.*utMask';
       b = makeb1D(I, ut);
     case 2
       [m, ~] = size(I);
       ut = triu(ones(m-1, m-1));
-      utMask = repmat(mask(1:m-1)', [m-1, 1]);
-      ut = ut.*utMask;
-      ut = ut.*utMask';
       b = makeb2D(I, ut);
     case 3
       [m, ~, ~] = size(I);
@@ -25,7 +19,6 @@ function b = makeb(I,mask)
         error('Improper size of I');
   end
 
-    
 end
 
 function b = makeb1D(I, ut)
@@ -35,11 +28,11 @@ function b = makeb1D(I, ut)
 end
 
 function b = makeb2D(I, ut)
-    [m, n] = size(I);
-    b = zeros(m, n);
-    for i = 1:n
-        b(:, i) = makeb1D(I(:,i), ut);
-    end
+  [m, n] = size(I);
+  b = zeros(m, n);
+  for i = 1:n
+    b(:, i) = makeb1D(I(:,i), ut);
+  end
 end
 
 function b = makeb3D(I, ut)
