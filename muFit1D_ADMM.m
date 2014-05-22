@@ -38,10 +38,10 @@ function [mu, fos, relFos] = muFit1D_ADMM(I, mask, z, z0, zR, eta, muStar )
     %    y(M+1:end), rho, lambda1, lambda2(1:M), lambda2(M+1:end));
     %end
 
-    Agamma = A*gamma;
-    Dgamma = D*gamma;
-    %Agamma = applyA( gamma, mask, I, dz, z, z0, zR );
-    %Dgamma = applyD( gamma, mask, dz, 1 );
+    %Agamma = A*gamma;
+    %Dgamma = D*gamma;
+    Agamma = applyA( gamma, I, dz, z, z0, zR );
+    Dgamma = applyD( gamma, dz, 1 );
     
     [y1, y2] = proxF1D( Agamma + 1/rho*lambda2(1:M), ...
                         Dgamma + 1/rho*lambda2(M+1:end), ...
@@ -53,7 +53,6 @@ function [mu, fos, relFos] = muFit1D_ADMM(I, mask, z, z0, zR, eta, muStar )
     lambda1 = lambda1 + rho*(gamma - u);
     lambda2(1:M) = lambda2(1:M) + rho*(Agamma-y1);
     lambda2(M+1:end) = lambda2(M+1:end) + rho*(Dgamma-y2);
-    %lambda2 = lambda2 + rho*(K*gamma - y);
   end
 
   mu = 1 ./ gamma;
