@@ -20,7 +20,9 @@ function muFit = muFit2D_ADMM(I, mask, z, z0, zR, eta )
     if mod(n,50)==0 disp(['2D ADMM iteration: ', num2str(n)]); end;
 
     if( n > 1 )
-      gamma = conjGrad_2D();
+      gamma = conjGrad_2D(gamma, I, z, dz, dx, z0, zR, u, y(1:M, :), ...
+        y(M+1:2*M, :), y(2*M+1 : end, :), rho, lambda1, lambda2(1:M, :), ...
+        lambda2(M+1:2*M, :), lambda2(2*M+1 : end, :));
     end
 
     Agamma = applyA( gamma, I, dz, z, z0, zR );
