@@ -1,26 +1,22 @@
-function [out1, out2] = proxF1D(x1, x2, b, lambda, eta)
+function [out1, out2] = proxF1D(x1, x2, mask, b, lambda, eta)
 
-  out1 = proxF1(x1, b, lambda);
-  out2 = proxF2(x2, lambda, eta);
+  out1 = proxF1(x1, mask, b, lambda);
+  out2 = proxF2(x2, mask, lambda, eta);
 
 end
 
-function out = proxF1(x1, b, lambda)
-  %out = (lambda/(lambda+1)) * (x1 + b);
-  out = (x1+lambda*b)/(1+lambda);
+function out = proxF1(x, mask, b, lambda)
+  out = ( lambda ./ (1+lambda*mask) ) .* ( mask.*b + x./lambda );
 end
 
-function out = proxF2(x2, lambda, eta)
+function out = proxF2(x, mask, lambda, eta)
 
-  out = zeros(size(x2));
+  out = zeros(size(x));
   
-  for i = 1:numel(x2)
-    if(x2(i) >= 0)
-      out(i) = max( x2(i) - lambda*eta, 0 );
-    else
-      out(i) = min( x2(i) + lambda*eta, 0 );
-    end
-  end
+  largeXIndxs = find( mask==1 & x >= eta*lambda );
+  out(largeXIndxs) = x(largeXIndxs) - eta*lambda;
+  smallXIndxs = find( mask==1 & x < -eta*lambda );
+  out(smallXIndxs) = x(smallXIndxs) + eta*lambda;
   
 end
 
