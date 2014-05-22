@@ -1,12 +1,11 @@
 
-function adjKy = applyAdjointK( yA, yDz, yDx, I, ...
-  mask, z, dz, dx, z0, zR )
+function adjKy = applyAdjointK( yA, yDz, yDx, I, z, dz, dx, z0, zR )
 
-  adjAY = applyAdjointA( yA, mask, I, z, dz, z0, zR );
+  adjAY = applyAdjointA(yA, I, z, dz, z0, zR);
 
-  adjDzY = applyAdjointD( yDz, mask, dz, 1 );
+  adjDzY = applyAdjointD(yDz, dz, 1);
 
-  adjDxY = applyAdjointD( yDx, mask, dx, 2 );
+  adjDxY = applyAdjointD(yDx, dx, 2);
 
   adjKy = adjAY + adjDzY + adjDxY;
 end
