@@ -28,36 +28,72 @@ function out = applyA( gamma, I, dz, z, z0, zR )
 end
 
 
-function out = applyA3D( gamma, I, dz, g )
-  [M N K] = size( I );
-  out = zeros([M N K]);
-  
-  ut = triu( ones(M-1,M-1) );
 
-  tmp = repmat( log( g(2:M)./g(1:M-1) ), [1 N, K] );
-  
-  out(1:M-1,:,:) = 1/2 * I(1:M-1,:) .* gamma(1:M-1,:) ./ dz ...
-    - 1/2 * I(M) * gamma(M) ./ dz ...
-    + 1/2 * ut * ( ...
-      I(1:M-1,:) ./ dz .* gamma(1:M-1,:) .* tmp ...
-    );
+function out = applyA3D( gamma, I, dz, g )
+  [M, N, K] = size(I);
+  out = zeros( M, N, K );
+
+  Lg = repmat( log( g(2:M)./g(1:M-1) ), [1 N K] );
+  utArg = I(1:M-1,:,:) .* gamma(1:M-1,:,:) .* Lg;
+
+  summed = sum( utArg, 1 );
+  summedM = repmat( summed, [M-1, 1, 1] );
+  cumSummed = cumsum( utArg, 1 );
+  utOut = summedM - cumSummed + utArg;
+
+  out(1:M-1,:,:) = 1/(2*dz) * ( ...
+    I(1:M-1,:,:) .* gamma(1:M-1,:,:) ...
+    - repmat( I(M,:,:) .* gamma(M,:,:), [M-1,1] ) ...
+    + utOut );
 end
+
+
 
 
 function out = applyA2D( gamma, I, dz, g )
   [M, N] = size(I);
   out = zeros( M, N );
-  
-  ut = triu( ones(M-1,M-1) );
 
-  tmp = repmat( log( g(2:M)./g(1:M-1) ), [1 N] );
-  
-  out(1:M-1,:) = 1/2 * I(1:M-1,:) .* gamma(1:M-1,:) ./ dz ...
-    - 1/2 * I(M) * gamma(M) ./ dz ...
-    + 1/2 * ut * ( ...
-      I(1:M-1,:) ./ dz .* gamma(1:M-1,:) .* tmp ...
-    );
+  Lg = repmat( log( g(2:M)./g(1:M-1) ), [1 N] );
+  utArg = I(1:M-1,:) .* gamma(1:M-1,:) .* Lg;
+
+  summed = sum( utArg, 1 );
+  summedM = repmat( summed, [M-1, 1] );
+  cumSummed = cumsum( utArg, 1 );
+  utOut = summedM - cumSummed + utArg;
+
+  out(1:M-1,:) = 1/(2*dz) * ( ...
+    I(1:M-1,:) .* gamma(1:M-1,:) ...
+    - repmat( I(M,:) .* gamma(M,:), [M-1,1] ) ...
+    + utOut );
 end
+
+
+% function out = applyA2D( gamma, I, dz, g )
+%   [M,N] = size(I);
+%   out = zeros(M,N);
+%   ut = triu( ones(M-1,M-1) );
+% 
+%   tmp = repmat( log( g(2:M)./g(1:M-1) ), [1 N] );
+%   
+%   out(1:M-1,:) = 1/2 * ( ...
+%       I(1:M-1,:) .* gamma(1:M-1,:) ./ dz ...
+%       - repmat( I(M,:) .* gamma(M,:) ./ dz, [M-1,1] ) ...
+%       + ut * ( I(1:M-1,:) ./ dz .* gamma(1:M-1,:) .* tmp ) ...
+%     );
+% end
+
+% function out = applyA2D( gamma, I, dz, g )
+%   [M, N] = size(I);
+%   out = zeros(M, N);
+%   
+%   ut = triu( ones(M-1,M-1) );
+%   
+%   for j=1:N
+%     out(:,j) = applyA1D( gamma(:,j), I(:,j), dz, g, ut );
+%   end
+% end
+
 
 
 function out = applyA1D( gamma, I, dz, g, ut )
