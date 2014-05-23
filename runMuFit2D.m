@@ -6,8 +6,7 @@ function runMuFit2D
   muAlpha = 0;    % Note, if we know true value than problem is better
 
   dataCase = 3;
-  %[I, z, dx, z0, zR, muAlpha, muBeta, muL0, trueMu ] = loadOctData( dataCase, false );
-load 'data.mat';
+  [I, z, dx, z0, zR, muAlpha, muBeta, muL0, trueMu ] = loadOctData( dataCase, false );
   
   I = I(:,150:200);
   
@@ -18,9 +17,10 @@ load 'data.mat';
   I = max( I - noiseLevel, 0 );
 
   eta = 1d5;
-  muFit = muFit2D_ADMM(I, mask, z, dx, z0, zR, eta );
+  [muFit fos] = muFit2D_ADMM(I, mask, z, dx, z0, zR, eta );
 
-  imshow( muFit, [0 4.5] );
+  figure, imshow( muFit, [0 4.5] );
+  figure, plot( fos ); title('fos');
   
 end
 
