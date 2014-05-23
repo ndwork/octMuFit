@@ -6,7 +6,7 @@ function [gamma] = conjGrad_2D( gammaGuess, I, z, dz, dx, z0, zR, u, yA, yDz, yD
   b = u + adjKy - (lambda1/sysRho) - (1/sysRho)*(adjKlambda2);
       
   eps = 0.5;
-  nIter = 100;
+  nIter = 20;
   
   %Initialize variables
   warmStart = 1;

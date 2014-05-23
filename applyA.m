@@ -33,12 +33,14 @@ function out = applyA3D( gamma, I, dz, g )
   out = zeros([M N K]);
   
   ut = triu( ones(M-1,M-1) );
+
+  tmp = repmat( log( g(2:M)./g(1:M-1) ), [1 N, K] );
   
-  for i=1:N
-    for j=1:K
-      out(:,i,j) = applyA1D( gamma(:,i,j), I(:,i,j), dz, g, ut );
-    end
-  end
+  out(1:M-1,:,:) = 1/2 * I(1:M-1,:) .* gamma(1:M-1,:) ./ dz ...
+    - 1/2 * I(M) * gamma(M) ./ dz ...
+    + 1/2 * ut * ( ...
+      I(1:M-1,:) ./ dz ./ gamma(1:M-1,:) .* tmp ...
+    );
 end
 
 
@@ -48,9 +50,13 @@ function out = applyA2D( gamma, I, dz, g )
   
   ut = triu( ones(M-1,M-1) );
 
-  for i=1:N
-    out(:,i) = applyA1D( gamma(:,i), I(:,i), dz, g, ut );
-  end
+  tmp = repmat( log( g(2:M)./g(1:M-1) ), [1 N] );
+  
+  out(1:M-1,:) = 1/2 * I(1:M-1,:) .* gamma(1:M-1,:) ./ dz ...
+    - 1/2 * I(M) * gamma(M) ./ dz ...
+    + 1/2 * ut * ( ...
+      I(1:M-1,:) ./ dz ./ gamma(1:M-1,:) .* tmp ...
+    );
 end
 
 

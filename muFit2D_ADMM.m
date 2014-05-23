@@ -1,8 +1,8 @@
 
 function [mu, fos] = muFit2D_ADMM(I, mask, z, dx, z0, zR, eta )
 
-  rho = 10;
-  nIter = 2000;
+  rho = 1;
+  nIter = 400;
 
   [M N] = size(I);
   dz = z(2) - z(1);
@@ -17,12 +17,12 @@ function [mu, fos] = muFit2D_ADMM(I, mask, z, dx, z0, zR, eta )
   gamma = zeros(M,N);
   lambda1 = zeros(M,N);
   lambda2 = zeros(3*M,N);
-  
+
   fos = zeros(nIter, 1);
 
   for n=1:nIter
-    if mod(n,2)==0 disp(['2D ADMM iteration: ', num2str(n)]); end;
-    
+    if mod(n,10)==0 disp(['2D ADMM iteration: ', num2str(n)]); end;
+
     fos(n) = objFunction2D(gamma, I, mask, dz, dx, z, z0, zR, eta);
 
     if( n > 1 )
