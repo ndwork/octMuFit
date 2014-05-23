@@ -1,10 +1,12 @@
 
-function [mu, fos] = muFit2D_ADMM(I, mask, z, dx, z0, zR, eta )
+function [mu, fos] = muFit2D_ADMM(I, mask, z, dx, z0, zR, etaz, etax )
 
-  rho = 1;
+  fos = [];
+
+  rho = 0.001;
   nIter = 400;
 
-  [M N] = size(I);
+  [M, N] = size(I);
   dz = z(2) - z(1);
 
   tmp = (z-z0)/zR;
@@ -23,7 +25,7 @@ function [mu, fos] = muFit2D_ADMM(I, mask, z, dx, z0, zR, eta )
   for n=1:nIter
     if mod(n,10)==0 disp(['2D ADMM iteration: ', num2str(n)]); end;
 
-    fos(n) = objFunction2D(gamma, I, mask, dz, dx, z, z0, zR, eta);
+    fos(n) = objFunction2D(gamma, I, mask, dz, dx, z, z0, zR, etaz, etax);
 
     if( n > 1 )
       gamma = conjGrad_2D(gamma, I, z, dz, dx, z0, zR, u, y(1:M, :), ...
@@ -38,7 +40,7 @@ function [mu, fos] = muFit2D_ADMM(I, mask, z, dx, z0, zR, eta )
     [y1, y2, y3] = proxF2D( Agamma + 1/rho*lambda2(1:M,:), ...
                        DzGamma + 1/rho*lambda2(M+1:2*M,:), ...
                        DxGamma + 1/rho*lambda2(2*M+1:end,:), ...
-                       mask, b, 1/rho, eta );
+                       mask, b, 1/rho, etaz, etax );
 
     u = proxG(gamma + 1/rho*lambda1, mask);
 

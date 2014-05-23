@@ -1,5 +1,7 @@
-function [gamma] = conjGrad_2D( gammaGuess, I, z, dz, dx, z0, zR, u, yA, yDz, yDx, sysRho, lambda1, lambda2A, lambda2Dz, lambda2Dx)
-  
+function [gamma] = conjGrad_2D( gammaGuess, ...
+  I, z, dz, dx, z0, zR, u, yA, yDz, yDx, sysRho, ...
+  lambda1, lambda2A, lambda2Dz, lambda2Dx)
+
   adjKy = applyAdjointK(yA, yDz, yDx, I, z, dz, dx, z0, zR);
   adjKlambda2 = applyAdjointK(lambda2A, lambda2Dz, lambda2Dx,I, z, dz, dx, z0, zR);
   
@@ -7,7 +9,7 @@ function [gamma] = conjGrad_2D( gammaGuess, I, z, dz, dx, z0, zR, u, yA, yDz, yD
       
   eps = 0.5;
   nIter = 20;
-  
+
   %Initialize variables
   warmStart = 1;
   if warmStart==0
@@ -20,7 +22,7 @@ function [gamma] = conjGrad_2D( gammaGuess, I, z, dz, dx, z0, zR, u, yA, yDz, yD
     r = b - gamma - KtKgamma;
   end
   rho = [Inf sum(r(:)'*r(:)) 0];  %rho[k-2 k-1 k]
-  
+
   for k = 1:nIter
     if(k == 1)
       p = r;

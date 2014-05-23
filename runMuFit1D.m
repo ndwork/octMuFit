@@ -28,9 +28,9 @@ load 'data.mat';
   noiseLevel = median( I(mask==0) );
   I = I - noiseLevel;
   I = max( I, 0 );
+  I = I.*mask;
 
   eta = 1d5;
-  I = I.*mask;
   %muStar = muFitCVX( I, mask, z, z0, zR, eta );
 load 'muStar.mat';
   %muFit = muStar;

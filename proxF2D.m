@@ -1,11 +1,11 @@
 
-function [out1, out2, out3] = proxF1D(x1, x2, x3, mask, b, lambda, eta)
+function [out1, out2, out3] = proxF2D(x1, x2, x3, mask, b, lambda, etaz, etax)
 
   % Note: F2 and F3 are the same function.
 
   out1 = proxF1(x1, mask, b, lambda);
-  out2 = proxF2(x2, mask, lambda, eta);
-  out3 = proxF2(x3, mask, lambda, eta);
+  out2 = proxF2(x2, mask, lambda, etaz);
+  out3 = proxF2(x3, mask, lambda, etax);
 
 end
 
