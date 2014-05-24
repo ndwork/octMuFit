@@ -1,5 +1,5 @@
 
-function normK = powerIterateK( x, I, mask, z, dz, dx, z0, zR )
+function normK = powerIterateK( x, I, z, dz, dx, z0, zR )
   % Use power iteration to estimate the norm of K
   
   tolerance = 1d-5;
@@ -13,8 +13,8 @@ function normK = powerIterateK( x, I, mask, z, dz, dx, z0, zR )
     iter = iter + 1;
     disp(['Working on Power Iteration: ', num2str(iter)]);
 
-    [yA, yDz, yDx] = applyK( x, mask, I, z, dz, dx, z0, zR );
-    KtKx = applyAdjointK( yA, yDz, yDx, I, mask, z, dz, dx, z0, zR );
+    [yA, yDz, yDx] = applyK( x, I, z, dz, dx, z0, zR );
+    KtKx = applyAdjointK( yA, yDz, yDx, I, z, dz, dx, z0, zR );
 
     lastLambda = lambda;
     lambda = norm( KtKx(:), 2 );
