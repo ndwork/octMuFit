@@ -9,6 +9,8 @@ function runMuFit2D
   [I, z, dx, z0, zR, muAlpha, muBeta, muL0, trueMu ] = loadOctData( dataCase, false );
 
   I = I(:,150:200);
+  I = I ./ 1000;
+  
 
   mask = findNonZeroMus(I);
 
@@ -16,8 +18,8 @@ function runMuFit2D
   I = max( I - noiseLevel, 0 );
   I = I .* mask;
 
-  etaz = 1d3;
-  etax = 1d3;
+  etaz = 1d-2;
+  etax = 1d-2;
   profile clear;
   profile on;
   tic;
