@@ -2,14 +2,14 @@ function [gamma, nIter, relError] = conjGrad_2D( gammaGuess, ...
   I, z, dz, dx, z0, zR, u, yA, yDz, yDx, sysRho, ...
   lambda1, lambda2A, lambda2Dz, lambda2Dx)
 
+  tolerance = 1d-2;
+  maxIter = 1000;
+
   adjKy = applyAdjointK(yA, yDz, yDx, I, z, dz, dx, z0, zR);
   adjKlambda2 = applyAdjointK(lambda2A, lambda2Dz, lambda2Dx,I, z, dz, dx, z0, zR);
 
   b = u + adjKy - (lambda1/sysRho) - (1/sysRho)*(adjKlambda2);
   normb = norm(b,2);
-
-  eps = 0.5;
-  maxIter = 1000;
 
   %Initialize variables
   warmStart = 1;
@@ -25,7 +25,6 @@ function [gamma, nIter, relError] = conjGrad_2D( gammaGuess, ...
   rho = [Inf sum(r(:)'*r(:)) 0];  %rho[k-2 k-1 k]
 
   relErrors = zeros(maxIter,1);
-  tolerance = 1d-3;
   relError = tolerance + 1;
   iter = 0;
 

@@ -16,8 +16,8 @@ function runMuFit2D
   I = max( I - noiseLevel, 0 );
   I = I .* mask;
 
-  etaz = 1d5;
-  etax = 1d7;
+  etaz = 1d3;
+  etax = 1d3;
   profile clear;
   profile on;
   tic;

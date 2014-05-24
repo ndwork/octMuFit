@@ -58,7 +58,7 @@ function [mu, fos] = muFit2D_ADMM(I, mask, z, dx, z0, zR, etaz, etax )
   mu = 1 ./ gamma;
   mu( mask==0 ) = 0;
   
-  figure, plot( cgNIters );
-  figure, plot( cgRelErrors );
+  figure, plot( cgNIters );  title('CG N Iterations');
+  figure, plot( cgRelErrors );  title('CG Relative Errors');
   
 end
