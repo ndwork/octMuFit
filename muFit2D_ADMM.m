@@ -21,16 +21,21 @@ function [mu, fos] = muFit2D_ADMM(I, mask, z, dx, z0, zR, etaz, etax )
   lambda2 = zeros(3*M,N);
 
   fos = zeros(nIter, 1);
-
+  cgNIters = zeros( nIter, 1 );
+  cgRelErrors = zeros( nIter, 1 );
+  
   for n=1:nIter
     if mod(n,10)==0 disp(['2D ADMM iteration: ', num2str(n)]); end;
 
     fos(n) = objFunction2D(gamma, I, mask, dz, dx, z, z0, zR, etaz, etax);
 
     if( n > 1 )
-      gamma = conjGrad_2D(gamma, I, z, dz, dx, z0, zR, u, y(1:M, :), ...
+      [gamma, cgNIter, cgRelError] = conjGrad_2D(gamma, ...
+        I, z, dz, dx, z0, zR, u, y(1:M, :), ...
         y(M+1:2*M, :), y(2*M+1 : end, :), rho, lambda1, lambda2(1:M, :), ...
         lambda2(M+1:2*M, :), lambda2(2*M+1 : end, :));
+      cgNIters(n) = cgNIter;
+      cgRelErrors(n) = cgRelError;
     end
 
     Agamma = applyA( gamma, I, dz, z, z0, zR );
@@ -52,5 +57,8 @@ function [mu, fos] = muFit2D_ADMM(I, mask, z, dx, z0, zR, etaz, etax )
 
   mu = 1 ./ gamma;
   mu( mask==0 ) = 0;
+  
+  figure, plot( cgNIters );
+  figure, plot( cgRelErrors );
   
 end
