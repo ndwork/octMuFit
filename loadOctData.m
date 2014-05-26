@@ -23,6 +23,7 @@ function [I, z, dx, z0, zR, alpha, beta, L0, trueMu] = ...
           numPix = 512;
           datafileParts = {'..','20140428','low'};
           cols2Del = 1:52;
+          averageFiles = 1;
       case 2 %High
           z0 = 1; %(mm)
           zR = 0.105905; %(mm)
@@ -31,6 +32,7 @@ function [I, z, dx, z0, zR, alpha, beta, L0, trueMu] = ...
           numPix = 512;
           datafileParts = {'..','20140428','high'};
           cols2Del = 1:52;
+          averageFiles = 1;
       case 3 %Layered regular
           z0 = 1; %(mm)
           zR = 0.105905; %(mm)
@@ -40,6 +42,7 @@ function [I, z, dx, z0, zR, alpha, beta, L0, trueMu] = ...
           datafileParts = {'..','20140428','layered', 'regular'};
           cols2Del = 1:52;
           rows2Del = 1:25;
+          averageFiles = 1;
       case 4 %Layered bladder
           z0 = 1; %(mm)
           zR = 0.105905; %(mm)
@@ -48,6 +51,135 @@ function [I, z, dx, z0, zR, alpha, beta, L0, trueMu] = ...
           numPix = 512;
           datafileParts = {'..','20140428','layered', 'bladder'};
           cols2Del = 1:52;
+          averageFiles = 1;
+      case 5 %Bladder
+          z0 = 1;
+          zR = 0.1059;
+          dx = 0.00502;
+          imgDepth = 2.358;
+          numPix = 512;
+          datafileParts = {'..', '20140519', 'Bladder', '1avg'};
+          cols2Del = [];
+          averageFiles = 0;
+      case 6 % Retina
+          z0 = 0.9;
+          zR = 0.1059;
+          dx = 0.00502;
+          imgDepth = 2.358;
+          numPix = 512;
+          datafileParts = {'..', '20140519', 'Retina', '1avg'};
+          cols2Del = [];
+          averageFiles = 0;    
+      case 7 % Layered 20140519
+          z0 = 1;
+          zR = 0.1059;
+          dx = 0.00502;
+          imgDepth = 2.358;
+          numPix = 512;
+          datafileParts = {'..', '20140519', 'TiO2_phantoms', 'layered', '1avg'};
+          cols2Del = [];
+          rows2Del = 1:50;
+          averageFiles = 0;
+      case 8 % Sclera
+          z0 = 1;
+          zR = 0.1059;
+          dx = 0.00502;
+          imgDepth = 2.358;
+          numPix = 512;
+          datafileParts = {'..', '20140519', 'Sclera', '1avg'};
+          cols2Del = [];
+          averageFiles = 0;
+      case 9 % Skin
+          z0 = 1;
+          zR = 0.1059;
+          dx = 0.00502;
+          imgDepth = 2.358;
+          numPix = 512;
+          datafileParts = {'..', '20140519', 'Skin', '1avg'};
+          cols2Del = [];
+          averageFiles = 0;
+      case 10 % Colon
+          %z0 = 0.8;
+z0 = 0.7;
+          zR = 0.1059;
+          dx = 0.00502;
+          imgDepth = 2.358;
+          numPix = 512;
+          datafileParts = {'..', '20140519', 'Colon', '1avg'};
+          cols2Del = [];
+          averageFiles = 0;
+      case 11 % Intralipid 1.25
+          z0 = 0.75;
+          zR = 0.1059;
+          dx = 0.00502;
+          imgDepth = 2.57;
+          numPix = 512;
+          datafileParts = {'..', '20140501', 'IntralipidPhantoms', '1-25', '1avg'};
+          cols2Del = [];
+          averageFiles = 0;
+      case 12 % Intralipid 2.5
+          z0 = 0.65;
+          zR = 0.1059;
+          dx = 0.00502;
+          imgDepth = 2.57;
+          numPix = 512;
+          datafileParts = {'..', '20140501', 'IntralipidPhantoms', '2-5', '1avg'};
+          cols2Del = [];
+          averageFiles = 0;
+      case 13 % Intralipid 5
+          z0 = 0.65;
+          zR = 0.1059;
+          dx = 0.00502;
+          imgDepth = 2.57;
+          numPix = 512;
+          datafileParts = {'..', '20140501', 'IntralipidPhantoms', '5', '1avg'};
+          cols2Del = [];
+          averageFiles = 0;
+      case 14 % Intralipid 10
+          z0 = 0.65;
+          zR = 0.1059;
+          dx = 0.00502;
+          imgDepth = 2.57;
+          numPix = 512;
+          datafileParts = {'..', '20140501', 'IntralipidPhantoms', '10', '1avg'};
+          cols2Del = [];
+          averageFiles = 0;
+      case 15 % Intralipid 15
+          z0 = 0.7;
+          zR = 0.1059;
+          dx = 0.00502;
+          imgDepth = 2.57;
+          numPix = 512;
+          datafileParts = {'..', '20140501', 'IntralipidPhantoms', '15', '1avg'};
+          cols2Del = [];
+          averageFiles = 0;
+      case 16 % Intralipid 20
+          z0 = 0.5;
+          zR = 0.1059;
+          dx = 0.00502;
+          imgDepth = 2.57;
+          numPix = 512;
+          datafileParts = {'..', '20140501', 'IntralipidPhantoms', '20', '1avg'};
+          cols2Del = [];
+          averageFiles = 0;
+      case 17 % Intralipid 1.25
+          z0 = 1.5;
+          zR = 0.1059;
+          dx = 0.00502;
+          imgDepth = 2.57;
+          numPix = 512;
+          datafileParts = {'..', '20140519', 'Intralipid', '1p25', '1avg'};
+          cols2Del = [];
+          averageFiles = 0;
+      case 18 % Intralipid 15
+          z0 = 1.1;
+          zR = 0.1059;
+          dx = 0.00502;
+          imgDepth = 2.57;
+          numPix = 512;
+          datafileParts = {'..', '20140519', 'Intralipid', '15', '1avg'};
+          cols2Del = [];
+          averageFiles = 0;
       otherwise
           error('Invalid data case');        
   end
@@ -69,13 +201,14 @@ function [I, z, dx, z0, zR, alpha, beta, L0, trueMu] = ...
   Isum = zeros(numPix);
   numSamps = 0;
 
-  for i = 1:length(filenames)
+  if(averageFiles)
+    for i = 1:length(filenames)
       datafile = strcat(dataDir, filenames(i).name);
       [pathstr, name, ext] = fileparts(datafile);
       if(~strcmp(ext, '.raw'))  %If the file is not *.raw then skip
-          continue;
+        continue;
       end
-
+      
       [interf,info] = getInterferograms(datafile,options);
       bscans = getBScans(interf);
       I_i = 10.^(bscans./20); % Convert from db
@@ -87,20 +220,38 @@ function [I, z, dx, z0, zR, alpha, beta, L0, trueMu] = ...
         figure, plot(IsumDec(:,308),'r'), drawnow, hold on
         %figure, plot(Isum(:,256),'r'), drawnow, hold on
       end
+    end
+    I = Isum/numSamps;
+    if(plotIt)
+      Idec = 20*log10(I);
+      plot(Idec(:,308),'b');
+      %plot(I(:,256), 'b')
+      xlabel('pixel')
+      legend('10 Averaged', '100 Averaged')
+      ylabel('Intensity in dB')
+    end
+  else
+    for i = 1:length(filenames)  % Find the first .raw file
+      datafile = strcat(dataDir, filenames(i).name);
+      [pathstr, name, ext] = fileparts(datafile);
+      if(~strcmp(ext, '.raw'))  %If the file is not *.raw then skip
+        continue;
+      else
+        break;
+      end
+    end
+    [interf,info] = getInterferograms(datafile,options);
+    bscans = getBScans(interf);
+    I = 10.^(bscans./20); % Convert from db    
   end
 
-  I = Isum/numSamps;
-  if(plotIt)
-    Idec = 20*log10(I);
-    plot(Idec(:,308),'b');
-    %plot(I(:,256), 'b')
-    xlabel('pixel')
-    legend('10 Averaged', '100 Averaged')
-    ylabel('Intensity in dB')
-  end
-  
+
+
   I(rows2Del, :) = [];
   z(rows2Del, :) = [];
+  if numel(rows2Del) > 0
+    z0 = z0 - z(max(rows2Del));
+  end
   I(:, cols2Del) = [];
   if numel(trueMu)>0
     trueMu(rows2Del, :) = [];

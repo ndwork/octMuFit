@@ -5,33 +5,45 @@ function runMuFit1D
 
   muAlpha = 0;    % Note, if we know true value than problem is better
 
-  dataCase = 3;
-  %[I, z, dx, z0, zR, muAlpha, muBeta, muL0, trueMu ] = loadOctData( dataCase, false );
-load 'data.mat';
+  dataCase = 7;
+  [I, z, dx, z0, zR, muAlpha, muBeta, muL0, trueMu ] = loadOctData( dataCase, false );
 
   if ~isvector(I)
     if dataCase==0
       trueMu = trueMu(:,1);
       I = I(:,1);
     else
-      I = I(:,156:256);
+      I = I(:,250:274);
       I = mean( I, 2 );
     end
   end
 
   if dataCase == 0
     mask = ones( numel(I), 1 );
+    eta = 1d4;
   else
+    if dataCase == 7
+      faberPts = [ 150, 189, 229, 270, 308 ];
+    elseif dataCase == 17
+      faberPts = [ 210 350 ];
+    end
     mask = findNonZeroMus(I);
+    noiseLevel = median( I(mask==0) );
+    I = I - noiseLevel;
+    I = max( I, 0 );
+    I(mask==0) = 0;
+    I = I ./ 1000;
+    eta = 1;
+    %eta = 10;
   end
 
-  noiseLevel = median( I(mask==0) );
-  I = I - noiseLevel;
-  I = max( I, 0 );
-  I = I.*mask;
-  I = I ./ 1000;
 
-  eta = 1d-3;
+  tic
+  muFit = muFitCVX( I, mask, z, z0, zR, eta );
+  timeTaken = toc;
+  disp(['Time taken: ', num2str(timeTaken)]);
+
+
   muStar = muFitCVX( I, mask, z, z0, zR, eta );
   %muFit = muStar;
   tic
@@ -49,18 +61,27 @@ load 'data.mat';
     xlabel('Iteration', 'FontSize', 14)
     ylabel('Relative Error', 'FontWeight', 'bold', 'FontSize', 14)
   end
-
-
+ 
+  
+  
+  
+  
+  
 
   figure;
   plot( z, muFit, 'r', 'LineWidth', 2 );
+  a = [0 max(z) 0 10.0];
+  axis(a)
   hold on;  
   if numel( trueMu ) > 0
     plot( z, trueMu, 'b', 'LineWidth', 2 );
     legend( 'CVX Fit', 'True \mu', 'Location', 'NorthWest' );
+  elseif dataCase==7 || dataCase==17
+    muFaber = muFitFaber( I, faberPts, z, z0, zR, muFit );
+    plot( z, muFaber, 'b', 'LineWidth', 2 );
+    legend( 'CVX Fit', 'Faber Fit', 'Location', 'NorthWest' );
   end
-  ylim([0,4.500]);
-  xlim([z(1),z(end)]);
+  axis(a)
   xlabel('Depth (mm)','FontSize',14);
   ylabel('Attenuation (mm^{-1})', 'FontSize', 14, 'FontWeight', 'bold');
 
@@ -80,7 +101,10 @@ load 'data.mat';
   figure;
   plot( z, I );
   fitI = mu2I( muFit, z, z0, zR, muAlpha, muBeta, muL0 );
-  scale = mean( I(1:50) ./ fitI(1:50) );
+  scale = median(I(mask~=0)) / median( fitI(mask~=0) );
+  if scale==0
+    scale = mean(I(mask~=0)) / mean( fitI(mask~=0) );
+  end
   fitI = fitI * scale;
   hold on;
   plot( z, fitI, 'r', 'LineWidth', 2 );
@@ -99,6 +123,7 @@ load 'data.mat';
 
   dz = z(2)-z(1);
   gam = 1 ./ muFit;
+  gam(mask==0) = 0;
   m = numel(I);
   ut = triu( ones(m-1,m-1) );
   tmp = (z-z0)/zR;
@@ -125,8 +150,6 @@ load 'data.mat';
   end
   xlabel('Depth (mm)');
   ylabel('f');
-
-
 
 
 end
