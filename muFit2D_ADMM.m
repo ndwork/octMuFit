@@ -43,18 +43,18 @@ function [mu, fos] = muFit2D_ADMM(I, mask, z, dx, z0, zR, etaz, etax )
   for n=1:nIter
     if mod(n,10)==0 disp(['2D ADMM iteration: ', num2str(n)]); end;
 
-    fos(n) = objFunction2D(gamma, I, mask, dz, dx, z, z0, zR, etaz, etax);
+    fos(n) = objFunction2D(gamma, I, mask, dz, dx, g, etaz, etax);
 
     if( n > 1 )
       [gamma, cgNIter, cgRelError] = conjGrad_2D(gamma, ...
-        I, z, dz, dx, z0, zR, u, y1, y2, y3, ...
+        I, dz, dx, g, u, y1, y2, y3, ...
         rho, lambda1, lambda2(1:M, :), ...
         lambda2(M+1:2*M, :), lambda2(2*M+1 : end, :));
       cgNIters(n) = cgNIter;
       cgRelErrors(n) = cgRelError;
     end
 
-    Agamma = applyA( gamma, I, dz, z, z0, zR );
+    Agamma = applyA( gamma, I, dz, g );
     DzGamma = applyD( gamma, dz, 1 );
     DxGamma = applyD( gamma, dx, 2 );
     
@@ -92,8 +92,8 @@ function [mu, fos] = muFit2D_ADMM(I, mask, z, dx, z0, zR, etaz, etax )
     yDiff3 = y3 - y3Old;
     uDiff = u - uOld;
     
-    adjKyDiff = applyAdjointK(yDiff1, yDiff2, yDiff3, I, z, dz, dx, z0, zR);
-    adjKlambda2 = applyAdjointK(lambda2(1:M,:), lambda2(M+1:2*M,:), lambda2(2*M+1:end,:), I, z, dz, dx, z0, zR);
+    adjKyDiff = applyAdjointK(yDiff1, yDiff2, yDiff3, I, dz, dx, g);
+    adjKlambda2 = applyAdjointK(lambda2(1:M,:), lambda2(M+1:2*M,:), lambda2(2*M+1:end,:), I, dz, dx, g);
     
     norm_sk = norm(rho*adjKyDiff(:)) + norm(rho*uDiff(:));    
     
