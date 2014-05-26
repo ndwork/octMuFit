@@ -29,10 +29,10 @@ load 'data.mat';
   I = I - noiseLevel;
   I = max( I, 0 );
   I = I.*mask;
+  I = I ./ 1000;
 
-  eta = 1d5;
-  %muStar = muFitCVX( I, mask, z, z0, zR, eta );
-load 'muStar.mat';
+  eta = 1d-3;
+  muStar = muFitCVX( I, mask, z, z0, zR, eta );
   %muFit = muStar;
   tic
   %[muFit, fos, relFos] = muFit1D_CP( I, mask, z, z0, zR, eta, muStar );

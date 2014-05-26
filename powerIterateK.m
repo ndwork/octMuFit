@@ -11,7 +11,9 @@ function normK = powerIterateK( x, I, z, dz, dx, z0, zR )
   iter = 0;
   while diff > tolerance && iter < maxNIter
     iter = iter + 1;
-    disp(['Working on Power Iteration: ', num2str(iter)]);
+    if mod(iter,50)==0
+      disp(['Working on Power Iteration: ', num2str(iter)]);
+    end
 
     [yA, yDz, yDx] = applyK( x, I, z, dz, dx, z0, zR );
     KtKx = applyAdjointK( yA, yDz, yDx, I, z, dz, dx, z0, zR );

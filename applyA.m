@@ -1,6 +1,6 @@
 
 
-function out = applyA( gamma, I, dz, z, z0, zR )
+function out = applyA( gamma, I, dz, g )
   % I is the intensity data
   % dz is a scalar representing the size of each pixel in the z (depth)
   %   direction
@@ -8,9 +8,6 @@ function out = applyA( gamma, I, dz, z, z0, zR )
 
   s = size(I);
   ndimsI = sum( s > 1 );
-
-  tmp = (z-z0)/zR;
-  g = 1 ./ sqrt( tmp.^2 + 1 );
 
   switch ndimsI
     case 1

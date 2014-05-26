@@ -1,7 +1,7 @@
 
-function [yA, yDz, yDx] = applyK( gamma, I, z, dz, dx, z0, zR )
+function [yA, yDz, yDx] = applyK( gamma, I, dz, dx, g )
 
-  yA = applyA( gamma, I, dz, z, z0, zR );
+  yA = applyA( gamma, I, dz, g );
 
   yDz = applyD( gamma, dz, 1 );
   yDx = applyD( gamma, dx, 2 );

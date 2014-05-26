@@ -4,7 +4,7 @@ function [mu, fos, relFos] = muFit1D_ADMM(I, mask, z, z0, zR, eta, muStar )
   fos = [];
   relFos = [];
 
-  rho = 0.001;
+  rho = 1d-3;
   nIter = 400;
 
   M = numel(I);
@@ -34,13 +34,13 @@ function [mu, fos, relFos] = muFit1D_ADMM(I, mask, z, z0, zR, eta, muStar )
 
     %gamma = IKtK \ ( u + K'*y - 1/rho*lambda1 - 1/rho*K'*lambda2 );
     if( n > 1 )
-      gamma = conjGrad_1D(gamma, I, z, dz, z0, zR, u, y(1:M), ...
+      gamma = conjGrad_1D(gamma, I, dz, g, u, y(1:M), ...
         y(M+1:end), rho, lambda1, lambda2(1:M), lambda2(M+1:end));
     end
 
     %Agamma = A*gamma;
     %Dgamma = D*gamma;
-    Agamma = applyA( gamma, I, dz, z, z0, zR );
+    Agamma = applyA( gamma, I, dz, g );
     Dgamma = applyD( gamma, dz, 1 );
     
     [y1, y2] = proxF1D( Agamma + 1/rho*lambda2(1:M), ...

@@ -1,5 +1,5 @@
 
-function normK = powerIterateK1D( x, I, mask, z, dz, z0, zR )
+function normK = powerIterateK1D( x, I, z, dz, z0, zR )
   % Use power iteration to estimate the norm of K
   
   tmp = (z-z0)/zR;
@@ -17,8 +17,8 @@ function normK = powerIterateK1D( x, I, mask, z, dz, z0, zR )
     iter = iter + 1;
     disp(['Working on Power Iteration: ', num2str(iter)]);
 
-    [yA, yDz] = applyK1D( x, mask, I, z, dz, z0, zR );
-    KtKx = applyAdjointK1D( yA, yDz, I, mask, z, dz, z0, zR );
+    [yA, yDz] = applyK1D( x, I, z, dz, z0, zR );
+    KtKx = applyAdjointK1D( yA, yDz, I, z, dz, z0, zR );
 
     %KtKx = K' * K * x;
 

@@ -7,31 +7,34 @@ function runMuFit2D
 
   dataCase = 3;
   [I, z, dx, z0, zR, muAlpha, muBeta, muL0, trueMu ] = loadOctData( dataCase, false );
+%load 'data.mat';
 
-  I = I(:,150:200);
-  I = I ./ 1000;
-  
+  %I = I(:,150:200);
 
   mask = findNonZeroMus(I);
 
   noiseLevel = median( I( mask==0 ) );
   I = max( I - noiseLevel, 0 );
   I = I .* mask;
+  I = I ./ 1000;
 
-  etaz = 1d-2;
-  etax = 1d-2;
+  etaz = 1d-3;
+  etax = 1d-3;
   profile clear;
   profile on;
   tic;
-  [muFit, fos] = muFit2D_ADMM(I, mask, z, dx, z0, zR, etaz, etax );
+  [muFit, fos, cgNIters, cgRelErrors ]= muFit2D_ADMM(I, mask, z, dx, z0, zR, etaz, etax );
   timeTaken = toc;
   profile off;
   disp(['Time taken (s):', num2str(timeTaken)]);
 
   figure, imshow( muFit, [0 4.5] );
-  figure, plot( fos ); title('fos');  
+  figure, semilogy( fos ); title('fos');  xlabel('ADMM Iteration');
   figure, plot( muFit(:,2) );  title('muFit col 25'); ylim([0 4.5]);
-  
+
+  figure, plot( cgNIters );  title('CG N Iterations');  xlabel('ADMM Iteration');
+  figure, plot( cgRelErrors );  title('CG Relative Errors');  xlabel('ADMM Iteration');
+
   profile viewer;
 end
 

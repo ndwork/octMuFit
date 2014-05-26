@@ -1,11 +1,8 @@
 
-function out = applyAdjointA( y, I, z, dz, z0, zR )
+function out = applyAdjointA( y, I, dz, g )
 
   s = size(I);
   ndimsI = sum( s > 1 );
-
-  tmp = (z-z0)/zR;
-  g = 1 ./ sqrt( tmp.^2 + 1 );
 
   switch ndimsI
     case 1 

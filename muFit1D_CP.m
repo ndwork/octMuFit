@@ -6,7 +6,7 @@ function [mu, fos, relFos] = muFit1D_CP( I, mask, z, z0, zR, eta, muStar )
   dz = z(2) - z(1);
 
   % Determine the norm of K
-  normK = powerIterateK1D( rand(size(I)), I, mask, z, dz, z0, zR );
+  normK = powerIterateK1D( rand(size(I)), I, z, dz, z0, zR );
 
   % Choose sigma and tau
   tau = 1 / normK;
@@ -22,7 +22,7 @@ function [mu, fos, relFos] = muFit1D_CP( I, mask, z, z0, zR, eta, muStar )
   b = makeb(I);
 
   M = numel(I);
-  Dz = makeD_1D( M, ones(M,1), dz );
+  Dz = makeD_1D( M, dz );
   tmp = (z-z0)/zR;
   g = 1 ./ sqrt( tmp.^2 + 1 );
   fos = zeros(nIter,1);

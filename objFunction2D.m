@@ -1,7 +1,7 @@
-function out = objFunction2D(gam,I,mask,dz,dx,z,z0,zR,etaZ, etaX)
+function out = objFunction2D(gam,I,mask,dz,dx,g,etaZ, etaX)
 
   b = makeb(I);
-  Ag = applyA(gam, I, dz, z, z0, zR);
+  Ag = applyA(gam, I, dz, g);
   Dgz = applyD(gam, dz, 1);
   Dgx = applyD(gam, dx, 2);
   

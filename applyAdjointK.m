@@ -1,7 +1,7 @@
 
-function adjKy = applyAdjointK( yA, yDz, yDx, I, z, dz, dx, z0, zR )
+function adjKy = applyAdjointK( yA, yDz, yDx, I, dz, dx, g )
 
-  adjAY = applyAdjointA(yA, I, z, dz, z0, zR);
+  adjAY = applyAdjointA(yA, I, dz, g);
 
   adjDzY = applyAdjointD(yDz, dz, 1);
 
