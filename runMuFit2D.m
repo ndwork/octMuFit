@@ -5,7 +5,7 @@ function runMuFit2D
 
   muAlpha = 0;    % Note, if we know true value than problem is better
 
-  dataCase = 3;
+  dataCase = 0;
   [I, z, dx, z0, zR, muAlpha, muBeta, muL0, trueMu ] = loadOctData( dataCase, false );
 %load 'data.mat';
 
@@ -23,7 +23,7 @@ function runMuFit2D
   profile clear;
   profile on;
   tic;
-  [muFit, fos, cgNIters, cgRelErrors ]= muFit2D_ADMM(I, mask, z, dx, z0, zR, etaz, etax );
+  [muFit, diagnostics ]= muFit2D_ADMM(I, mask, z, dx, z0, zR, etaz, etax );
   timeTaken = toc;
   profile off;
   disp(['Time taken (s):', num2str(timeTaken)]);
