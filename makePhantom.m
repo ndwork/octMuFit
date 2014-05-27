@@ -11,10 +11,10 @@ function [I, z, z0, zR, alpha, beta, L0, trueMu] = makePhantom()
   z = ( 0 : dz : maxZ )';
   g = 1 ./ sqrt( ((z-z0)/zR).^2 + 1 );
 
-  %muValues = [ 0 5 1 4 2 ];
-  %muThicks = [ 0.1 0.4 0.8 0.3 ];
-  muValues = [ 0.5 1 4 2 ];
-  muThicks = [ 0.4 0.8 0.3 ];
+  muValues = [ 0 5 1 4 2 ];
+  muThicks = [ 0.1 0.4 0.8 0.3 ];
+  %muValues = [ 0.5 1 4 2 ];
+  %muThicks = [ 0.4 0.8 0.3 ];
   trueMu = zeros( numel(z), 1 );
   muDepths = cumsum( muThicks );
   for i=numel(muDepths):-1:1
