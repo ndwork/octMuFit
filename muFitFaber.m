@@ -1,5 +1,5 @@
 
-function mu = muFitFaber( I, faberPts, z, z0, zR, muFit )
+function mu = muFitFaber( I, faberPts, z, z0, zR )
 
   mu = zeros( numel(I), 1 );
 
@@ -11,7 +11,11 @@ function mu = muFitFaber( I, faberPts, z, z0, zR, muFit )
 
   fitOptions = optimoptions( 'lsqnonlin', ...
     'Algorithm', 'levenberg-marquardt', ...
-    'MaxFunEvals',200);
+    'TolFun', 1d-14, ...
+    'TolX', 1d-14, ...
+    'MaxFunEvals', 10000, ...
+    'MaxIter', 10000 ...
+  );
 
   function errors = faberCost( vars )
     lmK = vars(1);
@@ -19,7 +23,7 @@ function mu = muFitFaber( I, faberPts, z, z0, zR, muFit )
     dz = thisZ-thisZ(1);
     modelValues = lmK * exp( -2 * lmMu.*dz ) .* thisg;
     errors = ( modelValues - data ) ./ max( thisSig, minSig );
-    disp( mean( errors.^2 ) );
+    %disp( mean( errors.^2 ) );
   end
 
 

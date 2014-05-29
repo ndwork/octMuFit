@@ -8,6 +8,8 @@ function runMuFit1D
   dataCase = 7;
   [I, z, dx, z0, zR, muAlpha, muBeta, muL0, trueMu ] = loadOctData( dataCase, false );
 
+zR = 2*zR;  
+
   if ~isvector(I)
     if dataCase==0
       trueMu = trueMu(:,1);
@@ -19,7 +21,9 @@ function runMuFit1D
   end
 
   if dataCase == 0
-    mask = ones( numel(I), 1 );
+    mask = trueMu > 0;
+    dMu = trueMu(2:end) - trueMu(1:end-1);
+    faberPts = find( abs(dMu) > 0 );
     eta = 1d4;
   else
     if dataCase == 7
@@ -33,24 +37,20 @@ function runMuFit1D
     I = max( I, 0 );
     I(mask==0) = 0;
     I = I ./ 1000;
-    eta = 1;
+    %eta = 1;
+    eta = 1d-1;
     %eta = 10;
   end
 
 
   tic
-  muFit = muFitCVX( I, mask, z, z0, zR, eta );
-  timeTaken = toc;
-  disp(['Time taken: ', num2str(timeTaken)]);
-
-
   muStar = muFitCVX( I, mask, z, z0, zR, eta );
-  %muFit = muStar;
-  tic
+%load muStar.mat
+  muFit = muStar;
   %[muFit, fos, relFos] = muFit1D_CP( I, mask, z, z0, zR, eta, muStar );
   %[muFit, fos, relFos] = muFit1D_CP2( I, mask, z, z0, zR, eta, muStar );
   %[muFit, fos, relFos] = muFit1D_LADMM(I, mask, z, z0, zR, eta, muStar );
-  [muFit, fos, relFos] = muFit1D_ADMM(I, mask, z, z0, zR, eta, muStar );
+  %[muFit, fos, relFos] = muFit1D_ADMM(I, mask, z, z0, zR, eta, muStar );
   timeTaken = toc;
   disp(['Time taken: ', num2str(timeTaken)]);
   if exist('fos')
@@ -61,25 +61,23 @@ function runMuFit1D
     xlabel('Iteration', 'FontSize', 14)
     ylabel('Relative Error', 'FontWeight', 'bold', 'FontSize', 14)
   end
- 
-  
-  
-  
-  
-  
+
+
 
   figure;
   plot( z, muFit, 'r', 'LineWidth', 2 );
   a = [0 max(z) 0 10.0];
   axis(a)
-  hold on;  
+  hold on;
   if numel( trueMu ) > 0
     plot( z, trueMu, 'b', 'LineWidth', 2 );
-    legend( 'CVX Fit', 'True \mu', 'Location', 'NorthWest' );
+    muFaber = muFitFaber( I, faberPts, z, z0, zR );
+    plot( z, muFaber, 'g', 'LineWidth', 2 );
+    legend( 'RICR', 'True \mu', 'Faber', 'Location', 'NorthWest' );
   elseif dataCase==7 || dataCase==17
-    muFaber = muFitFaber( I, faberPts, z, z0, zR, muFit );
+    muFaber = muFitFaber( I, faberPts, z, z0, zR );
     plot( z, muFaber, 'b', 'LineWidth', 2 );
-    legend( 'CVX Fit', 'Faber Fit', 'Location', 'NorthWest' );
+    legend( 'RICR', 'Faber Fit', 'Location', 'NorthWest' );
   end
   axis(a)
   xlabel('Depth (mm)','FontSize',14);

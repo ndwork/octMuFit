@@ -99,8 +99,7 @@ function [I, z, dx, z0, zR, alpha, beta, L0, trueMu] = ...
           cols2Del = [];
           averageFiles = 0;
       case 10 % Colon
-          %z0 = 0.8;
-z0 = 0.7;
+          z0 = 0.8;
           zR = 0.1059;
           dx = 0.00502;
           imgDepth = 2.358;
@@ -250,12 +249,21 @@ z0 = 0.7;
   I(rows2Del, :) = [];
   z(rows2Del, :) = [];
   if numel(rows2Del) > 0
-    z0 = z0 - z(max(rows2Del));
+    zRemove = z(max(rows2Del));
+    z0 = z0 - zRemove;
+    z = z - zRemove;
   end
   I(:, cols2Del) = [];
   if numel(trueMu)>0
     trueMu(rows2Del, :) = [];
     trueMu(:,cols2Del) = [];
   end
+
+
+  if dataCase ~= 0
+    zR = 2*zR;    % Multiply by 2 to convert from zR to apparent zR
+                  % See Faber paper for more details
+  end
+
 
 end
