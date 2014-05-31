@@ -8,8 +8,6 @@ function runMuFit1D
   dataCase = 7;
   [I, z, dx, z0, zR, muAlpha, muBeta, muL0, trueMu ] = loadOctData( dataCase, false );
 
-zR = 2*zR;  
-
   if ~isvector(I)
     if dataCase==0
       trueMu = trueMu(:,1);
@@ -76,11 +74,11 @@ zR = 2*zR;
     legend( 'RICR', 'True \mu', 'Faber', 'Location', 'NorthWest' );
   elseif dataCase==7 || dataCase==17
     muFaber = muFitFaber( I, faberPts, z, z0, zR );
-    plot( z, muFaber, 'b', 'LineWidth', 2 );
-    legend( 'RICR', 'Faber Fit', 'Location', 'NorthWest' );
+    plot( z, muFaber, 'b--', 'LineWidth', 2 );
+    legend( 'RICR', 'Faber Fit', 'FontSize', 12, 'Location', 'NorthWest' );
   end
   axis(a)
-  xlabel('Depth (mm)','FontSize',14);
+  xlabel('Depth (mm)','FontSize',16, 'FontWeight', 'bold');
   ylabel('Attenuation (mm^{-1})', 'FontSize', 14, 'FontWeight', 'bold');
 
   gamFit = 1 ./ muFit;
@@ -111,8 +109,8 @@ zR = 2*zR;
     plot( z, trueI, 'k', 'LineWidth', 2 );
     legend('data','fit','actual');
   end
-  xlabel('Depth (mm)');
-  ylabel('Intensity');
+  xlabel('Depth (mm)', 'FontSize', 14, 'FontWeight', 'bold');
+  ylabel('Intensity', 'FontSize', 14, 'FontWeight', 'bold');
   
   zless1mm = z < z(1)+0.75; %Find depths for which we are less than 0.75mm away from top surface 
   diffI = norm(I(zless1mm) - fitI(zless1mm));

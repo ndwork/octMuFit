@@ -6,44 +6,37 @@ function makeImage1D
   dataCase = 10;
   [I, z, ~, z0, zR, ~, ~, ~, trueMu ] = loadOctData( dataCase, false );
 
-  if dataCase == 7
-    I = I(100:end,:);
-  end
-
-  if dataCase == 0
-    mask = ones( numel(I), 1 );
-    eta = 1d4
-  else
-    mask = findNonZeroMus(I);
-    noiseLevel = median( I(mask==0) );
-    I = I - noiseLevel;
-    I = max( I, 0 );
-    I = I.*mask;
-    I = I ./ 1000;
-    eta = 1;
-  end
-
-  muFit = zeros(size(I));
-  [m, n] = size(I);
-
 
   numColAvg = 15;
-  halfNCol = floor(numColAvg/2);
-
+  
   % Horizontally average the data
-  h = fspecial('gaussian', [1 numColAvg], 2);
+  h = fspecial('gaussian', [1 numColAvg], 3);
   %h = fspecial('average', [1 numColAvg]);
   Iavg = imfilter( I, h );
+  
+  if dataCase == 0
+    mask = trueMu > 0;
+    dMu = trueMu(2:end) - trueMu(1:end-1);
+    eta = 1d4;
+  else
+    mask = findNonZeroMus(Iavg);
+    noiseLevel = median( Iavg(mask==0) );
+    Iavg = Iavg - noiseLevel;
+    Iavg = max( Iavg, 0 );
+    Iavg(mask==0) = 0;
+    Iavg = Iavg ./ 1000;
+    eta = 1d-1;
+  end
 
-  for i = 1:n
+  muFit = zeros(size(Iavg));
+  [m, n] = size(Iavg);
+
+  halfNCol = floor(numColAvg/2);
+  for i = halfNCol+1:n-halfNCol-1
     if(mod(i, 1) == 0)
       disp(['Working on column ', num2str(i)]);
     end
 
-    % Average column of interest with adjacent columns
-    if( i <= halfNCol || i >= (n-halfNCol) ) continue; end;
-
-    %Iavg = mean(I(:,i-halfNCol:i+halfNCol), 2);
     muFit(:,i) = muFitCVX( Iavg(:,i), mask(:,i), z, z0, zR, eta );
   end
 
