@@ -1,5 +1,9 @@
-function [I, z, dx, z0, zR, alpha, beta, L0, trueMu] = ...
+function [I, z, dx, z0, zR, alpha, beta, L0, ALA, trueMu] = ...
   loadOctData(dataCase, plotIt)
+
+  % ALA stands for "All Light Attenuated".  Set to true if all the light
+  %   is attenuated within the sample.  Set to false otherwise.
+
 
   if nargin<2 plotIt=false; end;
 
@@ -9,6 +13,9 @@ function [I, z, dx, z0, zR, alpha, beta, L0, trueMu] = ...
   alpha = [];
   beta = [];
   L0 = [];
+  
+  ALA = true;
+  
   switch dataCase
       case 0
           N = 100;
@@ -43,7 +50,7 @@ function [I, z, dx, z0, zR, alpha, beta, L0, trueMu] = ...
           cols2Del = 1:52;
           rows2Del = 1:25;
           averageFiles = 1;
-      case 4 %Layered bladder
+      case 4 %Layered bladder Phantom
           z0 = 1; %(mm)
           zR = 0.105905; %(mm)
           dx = 13d-3;
@@ -80,6 +87,7 @@ function [I, z, dx, z0, zR, alpha, beta, L0, trueMu] = ...
           cols2Del = [];
           rows2Del = 1:50;
           averageFiles = 0;
+          ALA = false;
       case 8 % Sclera
           z0 = 1;
           zR = 0.1059;
