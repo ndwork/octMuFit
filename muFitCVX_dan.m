@@ -1,5 +1,5 @@
 
-function mu = muFitCVX( I, mask, z, z0, zR, eta )
+function [mu,gam] = muFitCVX_dan( I, mask, z, z0, zR, eta )
 
   Md = find( mask, 1, 'last' );
 
@@ -9,8 +9,10 @@ function mu = muFitCVX( I, mask, z, z0, zR, eta )
   h = makeConfocalFunction( z, z0, zR );
 
   ut = triu( ones(Md-1,Md-1) );
-  cvx_begin quiet
+%   cvx_begin quiet
+  cvx_begin    
     %cvx_precision high
+    cvx_precision best
 
     variable gam(Md)
 

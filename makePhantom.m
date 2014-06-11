@@ -27,9 +27,9 @@ function [I, z, z0, zR, alpha, beta, L0, trueMu] = makePhantom()
   end
   trueMu(1:lastIndx-1) = muValues(1);
 
-  I = mu2I( trueMu, z, z0, zR, alpha, beta, L0 );
+  I = dz * mu2I( trueMu, z, z0, zR, alpha, beta, L0 );
 
-  noise = 2d-3*L0 * randn( numel(I), 1 );
-  %I = I + noise;
+  noise = 2d-5*L0 * randn( numel(I), 1 );
+  I = I + noise;
 
 end

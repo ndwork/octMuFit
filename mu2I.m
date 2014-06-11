@@ -6,7 +6,7 @@ function I = mu2I( mu, z, z0, zR, alpha, beta, L0 )
   dz = z(2:end) - z(1:end-1);
   dz = [ dz; dz(end) ];  % symmetric boundary condition
 
-  g = 1 ./ sqrt( ((z + dz/2 - z0) / zR).^2 + 1 );
+  h = makeConfocalFunction( z, z0, zR );
 
   I = zeros( numel(z), 1 );
 
@@ -15,11 +15,11 @@ function I = mu2I( mu, z, z0, zR, alpha, beta, L0 )
 
   tmp = mu(1) * dz(1)/2;
   for i=1:numel(I)
-    I(i) = k*mu(i) .* exp( -2 * tmp ) .* g(i);
+    I(i) = k*mu(i) .* exp( -2 * tmp ) .* h(i);
     if i < numel(I)
       tmp = tmp + mu(i)*dz(i)/2 + mu(i+1)*dz(i+1)/2;
     end
-  end  
+  end
 
 %   I(1) = k * mu(1) * g(1);
 %   tmp = 0;
