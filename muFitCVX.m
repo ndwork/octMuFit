@@ -8,6 +8,8 @@ function mu = muFitCVX( I, mask, z, z0, zR, eta )
 
   h = makeConfocalFunction( z, z0, zR );
 
+  nRegAvg = sum(mask);
+
   ut = triu( ones(Md-1,Md-1) );
   cvx_begin quiet
     %cvx_precision high
@@ -27,7 +29,7 @@ function mu = muFitCVX( I, mask, z, z0, zR, eta )
              ).^2 ...
            ) ...
       ) ...
-      + eta * sum( mask(1:Md) .* abs( D * gam ) ) ...
+      + eta * sum( mask(1:Md) .* abs( D * gam )/nRegAvg ) ...
     )
 
     subject to

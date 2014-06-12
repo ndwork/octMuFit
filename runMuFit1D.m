@@ -5,7 +5,7 @@ function runMuFit1D
 
   muAlpha = 0;    % Note, if we know true value than problem is better
 
-  dataCase = 0;
+  dataCase = 7;
   [I, z, dx, z0, zR, muAlpha, muBeta, muL0, ALA, trueMu ] = loadOctData( dataCase, false );
 
   if ~isvector(I)
@@ -20,10 +20,9 @@ function runMuFit1D
 
   if dataCase == 0
     mask = trueMu > 0;
-mask(end-160:end) = 0;
     dMu = trueMu(2:end) - trueMu(1:end-1);
     faberPts = find( abs(dMu) > 0 );
-    eta = 1d-2;
+    eta = 2000;
   else
     if dataCase == 7
       faberPts = [ 150, 189, 229, 270, 308 ];
@@ -37,11 +36,13 @@ mask(end-160:end) = 0;
     I(mask==0) = 0;
     I = I ./ 1000;
     %eta = 1;
-    eta = 1d-1;  % Best answer so far
-    %eta = 10;
+    %eta = 1d-1;  % Best answer so far
+    eta = 100;
     %eta = 0;
   end
 
+%mask(end-80:end) = 0;
+%I = I .* mask;
 
   muStar = muFitCVX( I, mask, z, z0, zR, eta );
 %load muStar.mat
@@ -69,15 +70,18 @@ mask(end-160:end) = 0;
   a = [0 max(z) 0 maxMu2Display];
   axis(a)
   hold on;
+  h = makeConfocalFunction( z, z0, zR );
+  muModVermeer = muFitModVermeer( I, z, h );
+  plot( z, muModVermeer, 'c' );
   if numel( trueMu ) > 0
     plot( z, trueMu, 'r--', 'LineWidth', 3 );
     muFaber = muFitFaber( I, faberPts, z, z0, zR );
     plot( z, muFaber, 'k:', 'LineWidth', 3 );
-    h_legend = legend( 'RICR', 'True \mu', 'Faber', 'Location', 'NorthWest' );
+    h_legend = legend( 'RICR', 'Mod Vermeer', 'True \mu', 'Faber', 'Location', 'NorthWest' );
   elseif dataCase==7 || dataCase==17
     muFaber = muFitFaber( I, faberPts, z, z0, zR );
     plot( z, muFaber, 'g--', 'LineWidth', 3 );
-    h_legend = legend( 'RICR', 'Faber Fit', 'FontSize', 12, 'Location', 'NorthWest' );
+    h_legend = legend( 'RICR', 'Mod Vermeer', 'Faber Fit', 'FontSize', 12, 'Location', 'NorthWest' );
   end
   axis(a)
   set(h_legend,'FontSize',14);
@@ -99,6 +103,7 @@ mask(end-160:end) = 0;
 
   figure;
   plot( z, I );
+  dz = z(2) - z(1);
   fitI = mu2I( muFit, z, z0, zR, muAlpha, muBeta, muL0 );
   scale = median(I(mask~=0)) / median( fitI(mask~=0) );
   if scale==0

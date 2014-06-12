@@ -5,7 +5,7 @@ function [I, z, z0, zR, alpha, beta, L0, trueMu] = makePhantom()
   beta = 1.0;
   L0 = 2000;
   z0 = 0.6;
-  zR = 0.1;
+  zR = 0.2;
   maxZ = 2;
   dz = 10d-3;
   z = ( 0 : dz : maxZ )';
@@ -27,7 +27,7 @@ function [I, z, z0, zR, alpha, beta, L0, trueMu] = makePhantom()
   end
   trueMu(1:lastIndx-1) = muValues(1);
 
-  I = dz * mu2I( trueMu, z, z0, zR, alpha, beta, L0 );
+  I = mu2I( trueMu, z, z0, zR, alpha, beta, L0 );
 
   noise = 2d-5*L0 * randn( numel(I), 1 );
   I = I + noise;

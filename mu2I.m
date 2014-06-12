@@ -21,6 +21,8 @@ function I = mu2I( mu, z, z0, zR, alpha, beta, L0 )
     end
   end
 
+  I = dz .* I;
+  
 %   I(1) = k * mu(1) * g(1);
 %   tmp = 0;
 %   for i=2:numel(I)
