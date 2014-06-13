@@ -9,8 +9,8 @@ function mu = muFitModVermeer( I, z, h )
      integral(m) = sum(term(m:end - 1)); 
   end
 
-  %mu = (.5/dz)*(term./integral);
-  mu = 0.5/dz * log( 1 + term./integral );
+  mu = (.5/dz)*(term./integral);
+  %mu = 0.5/dz * log( 1 + term./integral );
 
 end
 
