@@ -5,8 +5,9 @@ function runMuFit1D
 
   muAlpha = 0;    % Note, if we know true value than problem is better
 
-  dataCase = 7;
-  [I, z, dx, z0, zR, muAlpha, muBeta, muL0, ALA, trueMu ] = loadOctData( dataCase, false );
+  dataCase = 0;
+  [I, z, dx, z0, zR, muAlpha, muBeta, muL0, ALA, trueMu ] = ...
+    loadOctData( dataCase, false );
 
   if ~isvector(I)
     if dataCase==0
@@ -17,12 +18,12 @@ function runMuFit1D
       I = mean( I, 2 );
     end
   end
-
+  
   if dataCase == 0
     mask = trueMu > 0;
     dMu = trueMu(2:end) - trueMu(1:end-1);
     faberPts = find( abs(dMu) > 0 );
-    eta = 2000;
+    eta = 500;
   else
     if dataCase == 7
       faberPts = [ 150, 189, 229, 270, 308 ];
@@ -32,7 +33,7 @@ function runMuFit1D
 
     [mask, noiseLevel] = makeTheMask( I, ALA );
     I = I - noiseLevel;
-    I = max( I, 0 );
+    %I = max( I, 0 );
     I(mask==0) = 0;
     I = I ./ 1000;
     %eta = 1;

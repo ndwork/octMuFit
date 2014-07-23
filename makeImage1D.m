@@ -3,12 +3,12 @@ function makeImage1D
   addpath(genpath(pwd))
 
 
-  dataCase = 10;
+  dataCase = 7;
   [I, z, ~, z0, zR, ~, ~, ~, trueMu ] = loadOctData( dataCase, false );
 
 
   numColAvg = 15;
-  
+
   % Horizontally average the data
   h = fspecial('gaussian', [1 numColAvg], 3);
   %h = fspecial('average', [1 numColAvg]);
@@ -40,6 +40,6 @@ function makeImage1D
     muFit(:,i) = muFitCVX( Iavg(:,i), mask(:,i), z, z0, zR, eta );
   end
 
-  imshow(muFit, [0, 4.5])
+  imshow(muFit, [0, 5])
 end
 
