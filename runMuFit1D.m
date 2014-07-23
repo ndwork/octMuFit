@@ -38,11 +38,11 @@ function runMuFit1D
     I = I ./ 1000;
     %eta = 1;
     %eta = 1d-1;  % Best answer so far
-    eta = 100;
+    eta = 20;
     %eta = 0;
   end
 
-%mask(end-80:end) = 0;
+%mask(end-250:end) = 0;
 %I = I .* mask;
 
   muStar = muFitCVX( I, mask, z, z0, zR, eta );
@@ -142,13 +142,13 @@ function runMuFit1D
          );
   b = ut * ( I(1:Md-1) .* mask(1:Md-1) );
   figure;
-  plot( z(1:Md-1), b );
+  semilogy( z(1:Md-1), b );
   hold on;
-  plot( z(1:Md-1), fitf, 'r', 'LineWidth', 2 );
+  semilogy( z(1:Md-1), fitf, 'r', 'LineWidth', 2 );
   if numel( trueMu )
     trueI = mu2I( trueMu.*mask, z, z0, zR, muAlpha, muBeta, muL0 );
     truef = flipud(cumsum(flipud(trueI)));
-    plot( z, truef, 'k', 'LineWidth', 2 );
+    semilogy( z, truef, 'k', 'LineWidth', 2 );
     legend('data (b)','fit (A\gamma)','actual (A*true\gamma)');
   else
     legend('data (b)','fit (A\gamma)');
