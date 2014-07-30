@@ -105,27 +105,3 @@ function simMuFit2D( )
 end
 
 
-function [etbDepth, metric] = findErrorEnergyTooBigDepth( offsetThreshPercent, trueMu, muFit, z )
-  diff = abs( muFit - trueMu );
-  M = numel(muFit);
-  errEnergy = zeros( M, 1 );
-  for m=1:M
-    errEnergy(m) = norm( diff(1:m), 2 );
-  end
-  metric = errEnergy ./ norm( trueMu, 2 );
-  
-  etbIndx = find( metric > offsetThreshPercent, 1, 'first' );
-  etbDepth = z( etbIndx );
-end
-
-
-function violationDepth = findViolationDepth( offsetThreshPercent, trueMu, muFit, z )
-  offsetThresh = trueMu * offsetThreshPercent;
-  diff = abs( muFit - trueMu );
-  %Offset by 10 to account for Gaussian Blur Kernel
-  violations = diff > offsetThresh;
-  violationIndx = find( violations(10:end), 1, 'first' );
-  violationIndx = violationIndx + 9;
-  violationDepth = z( violationIndx );
-end
-
