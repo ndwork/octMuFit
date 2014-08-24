@@ -21,7 +21,9 @@ function muFit = muFit2D_whTV( I, z, z0, zR, mask )
 
   muFit = zeros( M, N );
   for i=1:M
-    disp(['Working on row ', num2str(i), ' of ', num2str(M)]);
+    if mod(i,50)==0
+      disp(['Working on row ', num2str(i), ' of ', num2str(M)]);
+    end
     
     muHatRow = muHat(i,:)';
     weightRow = weight(i,:)';

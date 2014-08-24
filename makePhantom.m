@@ -47,8 +47,9 @@ function [I, z, z0, zR, alpha, beta, L0, trueMu] = makePhantom( ...
 
   
 
-  trueMu = zeros( numel(z), 1 );
+  trueMu = muValues(1) * ones( numel(z), 1 );
   muDepths = cumsum( muThicks );
+  lastIndx = numel( trueMu );
   for i=numel(muDepths):-1:1
     lowIndx = find( z >= muDepths(i), 1 );
     if i==numel(muDepths)
