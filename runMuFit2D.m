@@ -5,7 +5,8 @@ function runMuFit2D
 
   muAlpha = 0;    % Note, if we know true value than problem is better
 
-  dataCase = 5;
+  %dataCase = 5;
+  dataCase = 0;
   [I, z, dx, z0, zR, muAlpha, muBeta, muL0, ALA, trueMu ] = ...
     loadOctData( dataCase, false );
 
