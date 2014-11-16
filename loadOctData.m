@@ -20,7 +20,7 @@ function [I, z, dx, z0, zR, alpha, beta, L0, ALA, trueMu] = ...
       case 0
           N = 100;
           dx = 13d-3;
-          [I,z,z0,zR,alpha,beta,L0,trueMu] = makePhantom2D(N);
+          [I,z,z0,zR,alpha,beta,L0,trueMu] = makePhantom2D(N,1);
           return
       case 1 %Low
           z0 = 1; %(mm)
@@ -30,6 +30,7 @@ function [I, z, dx, z0, zR, alpha, beta, L0, ALA, trueMu] = ...
           numPix = 512;
           datafileParts = {'..','20140428','low'};
           cols2Del = 1:52;
+          rows2Del = [];
           averageFiles = 1;
       case 2 %High
           z0 = 1; %(mm)
@@ -39,6 +40,7 @@ function [I, z, dx, z0, zR, alpha, beta, L0, ALA, trueMu] = ...
           numPix = 512;
           datafileParts = {'..','20140428','high'};
           cols2Del = 1:52;
+          rows2Del = [];
           averageFiles = 1;
       case 3 %Layered regular
           z0 = 1; %(mm)
@@ -95,6 +97,7 @@ function [I, z, dx, z0, zR, alpha, beta, L0, ALA, trueMu] = ...
           imgDepth = 2.358;
           numPix = 512;
           datafileParts = {'..', '20140519', 'Sclera', '1avg'};
+          rows2Del = [];
           cols2Del = [];
           averageFiles = 0;
       case 9 % Skin
@@ -105,6 +108,7 @@ function [I, z, dx, z0, zR, alpha, beta, L0, ALA, trueMu] = ...
           numPix = 512;
           datafileParts = {'..', '20140519', 'Skin', '1avg'};
           cols2Del = [];
+          rows2Del = [];
           averageFiles = 0;
       case 10 % Colon
           z0 = 0.8;
@@ -114,78 +118,79 @@ function [I, z, dx, z0, zR, alpha, beta, L0, ALA, trueMu] = ...
           numPix = 512;
           datafileParts = {'..', '20140519', 'Colon', '1avg'};
           cols2Del = [];
+          rows2Del = [];
           averageFiles = 0;
       case 11 % Intralipid 1.25
-          z0 = 0.75;
+          %z0 = 0.75;
           zR = 0.1059;
           dx = 0.00502;
           imgDepth = 2.57;
           numPix = 512;
-          datafileParts = {'..', '20140501', 'IntralipidPhantoms', '1-25', '1avg'};
+          %datafileParts = {'..', '20140501', 'IntralipidPhantoms', '1-25', '1avg'};
+          datafileParts = {'..', '20140519', 'Intralipid', '1p25', '1avg'};
+          z0 = 1.6;
           cols2Del = [];
+          rows2Del = [401:numPix];
           averageFiles = 0;
       case 12 % Intralipid 2.5
-          z0 = 0.65;
+          %z0 = 0.65;
           zR = 0.1059;
           dx = 0.00502;
           imgDepth = 2.57;
           numPix = 512;
-          datafileParts = {'..', '20140501', 'IntralipidPhantoms', '2-5', '1avg'};
+          %datafileParts = {'..', '20140501', 'IntralipidPhantoms', '2-5', '1avg'};
+          datafileParts = { '..', '20140519', 'Intralipid', '2p5', '1avg'};
+          z0 = 1.6;
           cols2Del = [];
+          rows2Del = [401:numPix];
           averageFiles = 0;
       case 13 % Intralipid 5
-          z0 = 0.65;
+          %z0 = 0.65;
           zR = 0.1059;
           dx = 0.00502;
           imgDepth = 2.57;
           numPix = 512;
-          datafileParts = {'..', '20140501', 'IntralipidPhantoms', '5', '1avg'};
+          %datafileParts = {'..', '20140501', 'IntralipidPhantoms', '5', '1avg'};
+          datafileParts = {'..', '20140519', 'Intralipid', '5', '1avg'};
+          z0 = 1.6;
           cols2Del = [];
+          rows2Del = [401:numPix];
           averageFiles = 0;
       case 14 % Intralipid 10
-          z0 = 0.65;
+          %z0 = 0.65;
           zR = 0.1059;
           dx = 0.00502;
           imgDepth = 2.57;
           numPix = 512;
-          datafileParts = {'..', '20140501', 'IntralipidPhantoms', '10', '1avg'};
+          %datafileParts = {'..', '20140501', 'IntralipidPhantoms', '10', '1avg'};
+          datafileParts = {'..', '20140519', 'Intralipid', '10', '1avg'};
+          z0 = 1.6;
           cols2Del = [];
+          rows2Del = [401:numPix];
           averageFiles = 0;
       case 15 % Intralipid 15
-          z0 = 0.7;
+          %z0 = 0.7;
           zR = 0.1059;
           dx = 0.00502;
           imgDepth = 2.57;
           numPix = 512;
-          datafileParts = {'..', '20140501', 'IntralipidPhantoms', '15', '1avg'};
+          %datafileParts = {'..', '20140501', 'IntralipidPhantoms', '15', '1avg' };
+          datafileParts = {'..', '20140519', 'Intralipid', '15', '1avg' };
+          z0 = 1.6;
           cols2Del = [];
+          rows2Del = [401:numPix];
           averageFiles = 0;
       case 16 % Intralipid 20
-          z0 = 0.5;
+          %z0 = 0.5;
           zR = 0.1059;
           dx = 0.00502;
           imgDepth = 2.57;
           numPix = 512;
-          datafileParts = {'..', '20140501', 'IntralipidPhantoms', '20', '1avg'};
+          %datafileParts = {'..', '20140501', 'IntralipidPhantoms', '20', '1avg'};
+          datafileParts = {'..', '20140519', 'Intralipid', '20', '1avg'};
+          z0 = 1.6;
           cols2Del = [];
-          averageFiles = 0;
-      case 17 % Intralipid 1.25
-          z0 = 1.5;
-          zR = 0.1059;
-          dx = 0.00502;
-          imgDepth = 2.57;
-          numPix = 512;
-          datafileParts = {'..', '20140519', 'Intralipid', '1p25', '1avg'};
-          cols2Del = [];
-          averageFiles = 0;
-      case 18 % Intralipid 15
-          z0 = 1.1;
-          zR = 0.1059;
-          dx = 0.00502;
-          imgDepth = 2.57;
-          numPix = 512;
-          datafileParts = {'..', '20140519', 'Intralipid', '15', '1avg'};
-          cols2Del = [];
+          rows2Del = [401:numPix];
           averageFiles = 0;
       otherwise
           error('Invalid data case');        
@@ -253,10 +258,9 @@ function [I, z, dx, z0, zR, alpha, beta, L0, ALA, trueMu] = ...
   end
 
 
-
   I(rows2Del, :) = [];
   z(rows2Del, :) = [];
-  if numel(rows2Del) > 0
+  if numel(rows2Del) > 0 && min(rows2Del) == 1
     zRemove = z(max(rows2Del));
     z0 = z0 - zRemove;
     z = z - zRemove;

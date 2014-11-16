@@ -5,7 +5,7 @@ function mask = findNonZeroMus(image)
   % where mu is 0 are set to 0
   
   dil = 10;
-  erd = 20;
+  erd = 35;
   
   [numR, numC] = size(image);
 

@@ -1,13 +1,13 @@
 
 function vermeerSim
 
-  z0 = -0.5;
+  z0 = -1.0;
   %noiseProportion = 1d-5;
   noiseProportion = 0;
   muValues = [1 3];
   muThicks = [1];
 
-  [I, z, z0, zR, alpha, beta, L0, maxSig, trueMu] = makePhantom( ...
+  [I, z, z0, zR, alpha, beta, L0, trueMu] = makePhantom( ...
     1, z0, noiseProportion, muValues, muThicks);
 
   muVer = muFitVermeer( I, z );

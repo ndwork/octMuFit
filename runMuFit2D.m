@@ -5,12 +5,10 @@ function runMuFit2D
 
   muAlpha = 0;    % Note, if we know true value than problem is better
 
-  %dataCase = 5;
-  dataCase = 0;
+  dataCase = 16;
+  %dataCase = 0;   % Simulation
   [I, z, dx, z0, zR, muAlpha, muBeta, muL0, ALA, trueMu ] = ...
     loadOctData( dataCase, false );
-
-  %I = I(:,150:200);
 
   if dataCase == 0
     mask = ones( size(I) );
@@ -34,7 +32,7 @@ function runMuFit2D
   showTrigger = pi;  %by making irrational, never shows
   paramsCP = struct('gamma',gamma,'tau',tau,'maxIter',maxIter,...
             'showTrigger',showTrigger,'theta',1,'overRelax',overRelax);
-  
+
   etaz = 1d-3;
   etax = 1d-3;
   %profile clear;
@@ -42,9 +40,19 @@ function runMuFit2D
   tic;
   %[muFit, diagnostics ]= muFit2D_ADMM(I, mask, z, dx, z0, zR, etaz, etax );
   muFit_mVer = muFit2D_mVer( I, z, z0, zR );
+
+  meanI = mean(I,2);
+  muFit_faber = muFitFaber( meanI, [200], z, z0, zR );
+  muFit_faber2 = muFitFaber( meanI, [200,220,350], z, z0, zR );
+  %Note: for Intralipid 20, need to change the 200 above to 170.
+  plot( muFit_faber, 'r', 'LineWidth', 2 );
+  hold on; plot( muFit_faber2, 'k:', 'LineWidth', 2 );
+  plot( muFit_mVer(:,200), 'b', 'LineWidth', 1 );  ylim([0 10]);
+
+  muFit = muFit_mVer;
   %muFit = muFit2D_TV( I, z, z0, zR );
   %muFit = muFit2D_whTV( I, z, z0, zR, mask );
-  muFit = weightedTvDenoise_CP( muFit_mVer, paramsCP );
+  %muFit = weightedTvDenoise_CP( muFit_mVer, paramsCP );
   %muFit = muFit2D_vReg( I, z, z0, zR, mask );
   %muFit = muFit2D_mVer_gBlur( I, z, z0, zR );
   timeTaken = toc;
@@ -53,7 +61,7 @@ function runMuFit2D
 
   figure, imshow( muFit, [0 5.0] );
 
-  if exists( 'diagnostics' )
+  if exist( 'diagnostics' )
     figure, semilogy( fos ); title('fos');  xlabel('ADMM Iteration');
     figure, plot( muFit(:,2) );  title('muFit col 25'); ylim([0 4.5]);
 

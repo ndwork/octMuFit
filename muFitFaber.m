@@ -2,6 +2,7 @@
 function mu = muFitFaber( I, faberPts, z, z0, zR )
 
   mu = zeros( numel(I), 1 );
+  k = zeros( numel(I), 1 );
 
   dy = abs( I(2:end) - I(1:end-1) );
   dy = [dy; dy(end)];
@@ -11,6 +12,7 @@ function mu = muFitFaber( I, faberPts, z, z0, zR )
 
   fitOptions = optimoptions( 'lsqnonlin', ...
     'Algorithm', 'levenberg-marquardt', ...
+    'display', 'off', ...
     'TolFun', 1d-14, ...
     'TolX', 1d-14, ...
     'MaxFunEvals', 10000, ...
@@ -21,8 +23,9 @@ function mu = muFitFaber( I, faberPts, z, z0, zR )
     lmK = vars(1);
     lmMu = vars(2);
     dz = thisZ-thisZ(1);
-    modelValues = lmK * exp( -2 * lmMu.*dz ) .* thisg;
-    errors = ( modelValues - data ) ./ max( thisSig, minSig );
+    modelValues = lmK * exp( -2 * lmMu .* dz ) .* thisg;
+    %errors = ( modelValues - data ) ./ max( thisSig, minSig );
+    errors = modelValues - data;
     %disp( mean( errors.^2 ) );
   end
 
@@ -60,13 +63,21 @@ function mu = muFitFaber( I, faberPts, z, z0, zR )
 
     if i == numel(faberPts)+1
       mu(lastFaberPt:end) = lmMu;
+      k(lastFaberPt:end) = lmK;
     else
       mu(lastFaberPt:faberPt) = lmMu;
+      k(lastFaberPt:faberPt) = lmK;
+      lastFaberPt = faberPt;
     end
-
-    lastFaberPt = faberPt;
   end
 
+  
+  %dz = z - z(1);
+  %modelValues = k .* exp( -2 .* mu .* dz ) .* g;
+  %plot( modelValues, 'r-' );
+  %hold on; plot( I, 'k:' );
+  
+  
   %figure;
   %plot( muFit, 'r' );
   %hold on; plot(mu, 'k' );
