@@ -38,12 +38,11 @@ function runMuFit2D
   %profile clear;
   %profile on;
   tic;
-  %[muFit, diagnostics ]= muFit2D_ADMM(I, mask, z, dx, z0, zR, etaz, etax );
   muFit_mVer = muFit2D_mVer( I, z, z0, zR );
 
-  %muFit = muFit_mVer;
+  muFit = muFit_mVer;
   %muFit = muFit2D_TV( I, z, z0, zR );
-  muFit = muFit2D_whTV( I, z, z0, zR, mask );
+  %muFit = muFit2D_whTV( I, z, z0, zR, mask );
   %muFit = weightedTvDenoise_CP( muFit_mVer, paramsCP );
   %muFit = muFit2D_vReg( I, z, z0, zR, mask );
   %muFit = muFit2D_mVer_gBlur( I, z, z0, zR );
@@ -65,12 +64,12 @@ function runMuFit2D
     meanFaber = mean( muFit_faber(skinLoc:depth5mm) );
     meanFit = mean( muFit(skinLoc:depth5mm,midCol) );
     disp(['MuFit Faber: ', num2str( meanFaber ) ]);
-    disp(['MuFit mVer: ', num2str( meanFit ) ]);
+    disp(['MuFit: ', num2str( meanFit ) ]);
   end
 
   figure, imshow( muFit, [0 5.0] );
 
-  if exist( 'diagnostics' )
+  if exist( 'diagnostics', 'var' )
     figure, semilogy( fos ); title('fos');  xlabel('ADMM Iteration');
     figure, plot( muFit(:,2) );  title('muFit col 25'); ylim([0 4.5]);
 
