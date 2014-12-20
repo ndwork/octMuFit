@@ -192,8 +192,18 @@ function [I, z, dx, z0, zR, alpha, beta, L0, ALA, trueMu] = ...
           cols2Del = [];
           rows2Del = [401:numPix];
           averageFiles = 0;
-      otherwise
-          error('Invalid data case');        
+    case 17 % Retina 2
+        z0 = 1.5;
+        zR = 0.1059;
+        dx = 0.00502;
+        imgDepth = 2.57;
+        numPix = 512;
+        datafileParts = {'..','20140828_OCT_Data','RetinaData','Location2'};
+        cols2Del = [];
+        rows2Del = [];
+        averageFiles = 0;
+    otherwise
+        error('Invalid data case');        
   end
 
 
