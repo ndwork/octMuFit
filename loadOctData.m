@@ -21,6 +21,8 @@ function [I, z, dx, z0, zR, alpha, beta, L0, ALA, trueMu] = ...
           N = 100;
           dx = 13d-3;
           [I,z,z0,zR,alpha,beta,L0,trueMu] = makePhantom2D(N,1);
+          alpha_R = 2;
+          n = 1.4;
           return
       case 1 %Low
           z0 = 1; %(mm)
@@ -32,6 +34,8 @@ function [I, z, dx, z0, zR, alpha, beta, L0, ALA, trueMu] = ...
           cols2Del = 1:52;
           rows2Del = [];
           averageFiles = 1;
+          alpha_R = 2;
+          n = 1.4;
       case 2 %High
           z0 = 1; %(mm)
           zR = 0.105905; %(mm)
@@ -42,6 +46,8 @@ function [I, z, dx, z0, zR, alpha, beta, L0, ALA, trueMu] = ...
           cols2Del = 1:52;
           rows2Del = [];
           averageFiles = 1;
+          alpha_R = 2;
+          n = 1.4;
       case 3 %Layered regular
           z0 = 1; %(mm)
           zR = 0.105905; %(mm)
@@ -52,6 +58,8 @@ function [I, z, dx, z0, zR, alpha, beta, L0, ALA, trueMu] = ...
           cols2Del = 1:52;
           rows2Del = 1:25;
           averageFiles = 1;
+          alpha_R = 2;
+          n = 1.4;
       case 4 %Layered bladder Phantom
           z0 = 1; %(mm)
           zR = 0.105905; %(mm)
@@ -61,6 +69,8 @@ function [I, z, dx, z0, zR, alpha, beta, L0, ALA, trueMu] = ...
           datafileParts = {'..','20140428','layered', 'bladder'};
           cols2Del = 1:52;
           averageFiles = 1;
+          alpha_R = 2;
+          n = 1.4;
       case 5 %Bladder
           z0 = 1;
           zR = 0.1059;
@@ -70,6 +80,8 @@ function [I, z, dx, z0, zR, alpha, beta, L0, ALA, trueMu] = ...
           datafileParts = {'..', '20140519', 'Bladder', '1avg'};
           cols2Del = [];
           averageFiles = 0;
+          alpha_R = 2;
+          n = 1.37;
       case 6 % Retina
           z0 = 0.9;
           zR = 0.1059;
@@ -78,7 +90,9 @@ function [I, z, dx, z0, zR, alpha, beta, L0, ALA, trueMu] = ...
           numPix = 512;
           datafileParts = {'..', '20140519', 'Retina', '1avg'};
           cols2Del = [];
-          averageFiles = 0;    
+          averageFiles = 0;
+          alpha_R = 2;
+          n = 1.37;
       case 7 % Layered 20140519
           z0 = 1;
           zR = 0.1059;
@@ -90,6 +104,8 @@ function [I, z, dx, z0, zR, alpha, beta, L0, ALA, trueMu] = ...
           rows2Del = 1:50;
           averageFiles = 0;
           ALA = false;
+          alpha_R = 2;
+          n = 1.4;
       case 8 % Sclera
           z0 = 1;
           zR = 0.1059;
@@ -100,6 +116,8 @@ function [I, z, dx, z0, zR, alpha, beta, L0, ALA, trueMu] = ...
           rows2Del = [];
           cols2Del = [];
           averageFiles = 0;
+          alpha_R = 2;
+          n = 1.37;
       case 9 % Skin
           z0 = 1;
           zR = 0.1059;
@@ -110,6 +128,8 @@ function [I, z, dx, z0, zR, alpha, beta, L0, ALA, trueMu] = ...
           cols2Del = [];
           rows2Del = [];
           averageFiles = 0;
+          alpha_R = 2;
+          n = 1.37;
       case 10 % Colon
           z0 = 0.8;
           zR = 0.1059;
@@ -120,6 +140,8 @@ function [I, z, dx, z0, zR, alpha, beta, L0, ALA, trueMu] = ...
           cols2Del = [];
           rows2Del = [];
           averageFiles = 0;
+          alpha_R = 2;
+          n = 1.37;
       case 11 % Intralipid 1.25
           %z0 = 0.75;
           zR = 0.1059;
@@ -132,6 +154,8 @@ function [I, z, dx, z0, zR, alpha, beta, L0, ALA, trueMu] = ...
           cols2Del = [];
           rows2Del = [401:numPix];
           averageFiles = 0;
+          alpha_R = 2;
+          n = 1.353;
       case 12 % Intralipid 2.5
           %z0 = 0.65;
           zR = 0.1059;
@@ -144,6 +168,8 @@ function [I, z, dx, z0, zR, alpha, beta, L0, ALA, trueMu] = ...
           cols2Del = [];
           rows2Del = [401:numPix];
           averageFiles = 0;
+          alpha_R = 2;
+          n = 1.353;
       case 13 % Intralipid 5
           %z0 = 0.65;
           zR = 0.1059;
@@ -156,42 +182,50 @@ function [I, z, dx, z0, zR, alpha, beta, L0, ALA, trueMu] = ...
           cols2Del = [];
           rows2Del = [401:numPix];
           averageFiles = 0;
+          alpha_R = 2;
+          n = 1.353;
       case 14 % Intralipid 10
           %z0 = 0.65;
           zR = 0.1059;
           dx = 0.00502;
           imgDepth = 2.57;
           numPix = 512;
-          %datafileParts = {'..', '20140501', 'IntralipidPhantoms', '10', '1avg'};
-          datafileParts = {'..', '20140519', 'Intralipid', '10', '1avg'};
+          datafileParts = {'..', '20140501', 'IntralipidPhantoms', '10', '1avg'};
+          %datafileParts = {'..', '20140519', 'Intralipid', '10', '1avg'};
           z0 = 1.6;
-          cols2Del = [];
-          rows2Del = [401:numPix];
+          cols2Del = [1:100];
+          rows2Del = [301:numPix];
           averageFiles = 0;
+          alpha_R = 2;
+          n = 1.353;
       case 15 % Intralipid 15
           %z0 = 0.7;
           zR = 0.1059;
           dx = 0.00502;
           imgDepth = 2.57;
           numPix = 512;
-          %datafileParts = {'..', '20140501', 'IntralipidPhantoms', '15', '1avg' };
-          datafileParts = {'..', '20140519', 'Intralipid', '15', '1avg' };
+          datafileParts = {'..', '20140501', 'IntralipidPhantoms', '15', '1avg' };
+          %datafileParts = {'..', '20140519', 'Intralipid', '15', '1avg' };
           z0 = 1.6;
-          cols2Del = [];
-          rows2Del = [401:numPix];
+          cols2Del = [1:100];
+          rows2Del = [301:numPix];
           averageFiles = 0;
+          alpha_R = 2;
+          n = 1.353;
       case 16 % Intralipid 20
           %z0 = 0.5;
           zR = 0.1059;
           dx = 0.00502;
           imgDepth = 2.57;
           numPix = 512;
-          %datafileParts = {'..', '20140501', 'IntralipidPhantoms', '20', '1avg'};
-          datafileParts = {'..', '20140519', 'Intralipid', '20', '1avg'};
+          datafileParts = {'..', '20140501', 'IntralipidPhantoms', '20', '1avg'};
+          %datafileParts = {'..', '20140519', 'Intralipid', '20', '1avg'};
           z0 = 1.6;
-          cols2Del = [];
-          rows2Del = [401:numPix];
+          cols2Del = [1:100];
+          rows2Del = [301:numPix];
           averageFiles = 0;
+          alpha_R = 2;
+          n = 1.353;
     case 17 % Retina 2
         z0 = 1.5;
         zR = 0.1059;
@@ -202,6 +236,8 @@ function [I, z, dx, z0, zR, alpha, beta, L0, ALA, trueMu] = ...
         cols2Del = [];
         rows2Del = [];
         averageFiles = 0;
+        alpha_R = 2;
+        n = 1.37;
     otherwise
         error('Invalid data case');        
   end
@@ -283,8 +319,8 @@ function [I, z, dx, z0, zR, alpha, beta, L0, ALA, trueMu] = ...
 
 
   if dataCase ~= 0
-    zR = 2*zR;    % Multiply by 2 to convert from zR to apparent zR
-                  % See Faber paper for more details
+    zR = alpha_R*n*zR;    % Multiply by alpha and n to convert from zR 
+                        % to apparent zR. See Faber paper for more details
   end
 
 

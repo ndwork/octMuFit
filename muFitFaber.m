@@ -8,7 +8,7 @@ function mu = muFitFaber( I, faberPts, z, z0, zR )
   dy = [dy; dy(end)];
   minSig = mean( dy( dy~=0 ) );
 
-  g = ( ( (z-z0)/zR ).^2 + 1 ).^(-1/2);
+  h = makeConfocalFunction( z, z0, zR );
 
   fitOptions = optimoptions( 'lsqnonlin', ...
     'Algorithm', 'levenberg-marquardt', ...
@@ -23,7 +23,7 @@ function mu = muFitFaber( I, faberPts, z, z0, zR )
     lmK = vars(1);
     lmMu = vars(2);
     dz = thisZ-thisZ(1);
-    modelValues = lmK * exp( -2 * lmMu .* dz ) .* thisg;
+    modelValues = lmK * exp( -2*lmMu .* dz ) .* thisH;
     %errors = ( modelValues - data ) ./ max( thisSig, minSig );
     errors = modelValues - data;
     %disp( mean( errors.^2 ) );
@@ -38,13 +38,13 @@ function mu = muFitFaber( I, faberPts, z, z0, zR )
       data = I(lastFaberPt:end);
       thisZ = z(lastFaberPt:end);
       thisSig = dy(lastFaberPt:end);
-      thisg = g(lastFaberPt:end);
+      thisH = h(lastFaberPt:end);
     else
       faberPt = faberPts(i);
       data = I(lastFaberPt:faberPt);
       thisZ = z(lastFaberPt:faberPt);
       thisSig = dy(lastFaberPt:faberPt);
-      thisg = g(lastFaberPt:faberPt);
+      thisH = h(lastFaberPt:faberPt);
     end
 
     lmOut = lsqnonlin( @faberCost, [1 0], [], [], fitOptions );
