@@ -10,7 +10,7 @@ function etbDepth = findErrorEnergyTooBigDepth( offsetThreshPercent, trueMu, muF
     metric(m) = errEnergy(m) / normTrue;
     if metric(m) > offsetThreshPercent
       etbIndx = m;
-      etbDepth = z( m );
+      etbDepth = z( etbIndx );
       break;
     end
   end

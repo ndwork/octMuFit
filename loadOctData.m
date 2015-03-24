@@ -1,11 +1,9 @@
-function [I, z, dx, z0, zR, alpha, beta, L0, ALA, trueMu] = ...
-  loadOctData(dataCase, plotIt)
-
+function [I, z, dx, z0, zR, alpha, beta, L0, lambda, deltaLambda, ...
+  dLambda, ALA, trueMu ] = loadOctData(dataCase, plotIt)
   % ALA stands for "All Light Attenuated".  Set to true if all the light
   %   is attenuated within the sample.  Set to false otherwise.
 
-
-  if nargin<2 plotIt=false; end;
+  if nargin<2, plotIt=false; end;
 
   trueMu = [];
   cols2Del = [];
@@ -15,20 +13,23 @@ function [I, z, dx, z0, zR, alpha, beta, L0, ALA, trueMu] = ...
   L0 = [];
   
   ALA = true;
-  
+
+  [lambda,deltaLambda,dLambda] = getTelestoFalloffParams();
+
   switch dataCase
       case 0
           N = 100;
           dx = 13d-3;
-          [I,z,z0,zR,alpha,beta,L0,trueMu] = makePhantom2D(N,1);
+          [I,z,z0,zR,alpha,beta,L0,trueMu] = makePhantom2D(N,1, ...
+            lambda, deltaLambda, dLambda );
           alpha_R = 2;
-          n = 1.4;
+          n = 1.37;
           return
       case 1 %Low
-          z0 = 1; %(mm)
-          zR = 0.105905; %(mm)
+          z0 = 1;  % mm
+          zR = 0.105905;  % mm
           dx = 13d-3;
-          imgDepth = 2.57;
+          imgDepth = 2.57;  % mm
           numPix = 512;
           datafileParts = {'..','20140428','low'};
           cols2Del = 1:52;
@@ -37,8 +38,8 @@ function [I, z, dx, z0, zR, alpha, beta, L0, ALA, trueMu] = ...
           alpha_R = 2;
           n = 1.4;
       case 2 %High
-          z0 = 1; %(mm)
-          zR = 0.105905; %(mm)
+          z0 = 1;  % mm
+          zR = 0.105905;  % mm
           dx = 13d-3;
           imgDepth = 2.57;
           numPix = 512;
@@ -49,8 +50,8 @@ function [I, z, dx, z0, zR, alpha, beta, L0, ALA, trueMu] = ...
           alpha_R = 2;
           n = 1.4;
       case 3 %Layered regular
-          z0 = 1; %(mm)
-          zR = 0.105905; %(mm)
+          z0 = 1;  % mm
+          zR = 0.105905;  % mm
           dx = 13d-3;
           imgDepth = 2.57;
           numPix = 512;
@@ -73,7 +74,7 @@ function [I, z, dx, z0, zR, alpha, beta, L0, ALA, trueMu] = ...
           n = 1.4;
       case 5 %Bladder
           z0 = 1;
-          zR = 0.1059;
+          zR = 0.105905; %(mm)
           dx = 0.00502;
           imgDepth = 2.358;
           numPix = 512;
@@ -84,7 +85,7 @@ function [I, z, dx, z0, zR, alpha, beta, L0, ALA, trueMu] = ...
           n = 1.37;
       case 6 % Retina
           z0 = 0.9;
-          zR = 0.1059;
+          zR = 0.105905; %(mm)
           dx = 0.00502;
           imgDepth = 2.358;
           numPix = 512;
@@ -95,7 +96,7 @@ function [I, z, dx, z0, zR, alpha, beta, L0, ALA, trueMu] = ...
           n = 1.37;
       case 7 % Layered 20140519
           z0 = 1;
-          zR = 0.1059;
+          zR = 0.105905; %(mm)
           dx = 0.00502;
           imgDepth = 2.358;
           numPix = 512;
@@ -108,7 +109,7 @@ function [I, z, dx, z0, zR, alpha, beta, L0, ALA, trueMu] = ...
           n = 1.4;
       case 8 % Sclera
           z0 = 1;
-          zR = 0.1059;
+          zR = 0.105905; %(mm)
           dx = 0.00502;
           imgDepth = 2.358;
           numPix = 512;
@@ -120,7 +121,7 @@ function [I, z, dx, z0, zR, alpha, beta, L0, ALA, trueMu] = ...
           n = 1.37;
       case 9 % Skin
           z0 = 1;
-          zR = 0.1059;
+          zR = 0.105905; %(mm)
           dx = 0.00502;
           imgDepth = 2.358;
           numPix = 512;
@@ -242,7 +243,6 @@ function [I, z, dx, z0, zR, alpha, beta, L0, ALA, trueMu] = ...
         error('Invalid data case');        
   end
 
-
   if ispc
       slash = '\';
   else
@@ -291,7 +291,7 @@ function [I, z, dx, z0, zR, alpha, beta, L0, ALA, trueMu] = ...
   else
     for i = 1:length(filenames)  % Find the first .raw file
       datafile = strcat(dataDir, filenames(i).name);
-      [pathstr, name, ext] = fileparts(datafile);
+      [~, ~, ext] = fileparts(datafile);
       if(~strcmp(ext, '.raw'))  %If the file is not *.raw then skip
         continue;
       else
@@ -300,7 +300,7 @@ function [I, z, dx, z0, zR, alpha, beta, L0, ALA, trueMu] = ...
     end
     [interf,info] = getInterferograms(datafile,options);
     bscans = getBScans(interf);
-    I = 10.^(bscans./20); % Convert from db    
+    I = 10.^(bscans./20); % Convert from db
   end
 
 
@@ -317,11 +317,13 @@ function [I, z, dx, z0, zR, alpha, beta, L0, ALA, trueMu] = ...
     trueMu(:,cols2Del) = [];
   end
 
+  [lambda,deltaLambda,dLambda] = getTelestoFalloffParams()
 
   if dataCase ~= 0
-    zR = alpha_R*n*zR;    % Multiply by alpha and n to convert from zR 
+    I = I ./ 55743;     % Divide by this amount to make consistent with
+                        % theoretical falloff function
+    zR = alpha_R*n*zR;  % Multiply by alpha and n to convert from zR 
                         % to apparent zR. See Faber paper for more details
   end
-
 
 end

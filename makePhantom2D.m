@@ -1,9 +1,11 @@
 
 %function [I, z, z0, zR, alpha, beta, L0, trueMu] = makePhantom2D( ...
-%  N,phantomType,z0,muValues,muThicks)
+%  N, phantomType, lambda, deltaLambda, dLambda, z0, noiseProportion, ...
+%  muValues, muThicks, zR )
+
 
 function [I, z, z0, zR, alpha, beta, L0, trueMu] = makePhantom2D( ...
-  N,phantomType,varargin)
+  N, phantomType, varargin )
 
   M = 201;
   I = zeros(M, N);
@@ -16,4 +18,3 @@ function [I, z, z0, zR, alpha, beta, L0, trueMu] = makePhantom2D( ...
   end
 
 end
-

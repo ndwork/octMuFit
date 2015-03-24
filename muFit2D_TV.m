@@ -1,5 +1,5 @@
 
-function muFit = muFit2D_TV( I, z, z0, zR )
+function muFit = muFit2D_TV( I, z, z0, zR, lambda, deltaLambda, dLambda )
 
   theta = 1.0;    % regularization parameter
 

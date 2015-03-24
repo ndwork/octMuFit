@@ -1,10 +1,7 @@
 
 function muFit = muFit2D_whTV( I, z, z0, zR, mask )
 
-  %eta = 1.0;
-  %eta = 0.3;  % Best one so far (before divide by Nx)
-  eta = 300;  % Best one so far (after dividing by Nx)
-  %epsilon = 1d-2;
+  eta = 300;
   epsilon = 1d-1;
 
   [M, N] = size( I );
@@ -32,7 +29,7 @@ function muFit = muFit2D_whTV( I, z, z0, zR, mask )
     if max( maskRow ) == 0
       muFit(i,:) = 0;
     else
-    
+
       Nx = sum(maskRow);
 
       cvx_begin quiet

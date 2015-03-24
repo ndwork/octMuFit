@@ -1,6 +1,4 @@
 
-
-
 function muFit = muFit2D_mVer_gBlur( I, z, z0, zR )
 
   muHat = muFit2D_mVer( I, z, z0, zR );

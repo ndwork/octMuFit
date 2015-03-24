@@ -7,11 +7,12 @@ function I = mu2I( mu, z, z0, zR, alpha, beta, L0 )
   dz = [ dz; dz(end) ];  % symmetric boundary condition
 
   h = makeConfocalFunction( z, z0, zR );
+  %f = makeFalloffFunction( z, lambda, deltaLambda, dLambda );
 
   I = zeros( numel(z), 1 );
 
   k = alpha*beta*L0;
-  if numel(k) == 0 k=1; end;
+  if numel(k) == 0, k=1; end;
 
   tmp = mu(1) * dz(1)/2;
   for i=1:numel(I)
@@ -22,14 +23,4 @@ function I = mu2I( mu, z, z0, zR, alpha, beta, L0 )
   end
 
   I = dz .* I;  % Integration over a pixel
-  
-%   I(1) = k * mu(1) * g(1);
-%   tmp = 0;
-%   for i=2:numel(I)
-%     dz = z(i) - z(i-1);
-%     tmp = tmp + mu(i-1) * dz;
-%     I(i) = k*mu(i) .* exp( -2 * tmp ) .* g(i);
-%   end
-
 end
-

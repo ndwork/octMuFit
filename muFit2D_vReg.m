@@ -12,7 +12,7 @@ function muFit = muFit2D_vReg( I, z, z0, zR, mask )
 
   h = makeConfocalFunction( z, z0, zR );
   for j=1:N
-    muHat(:,j) = muFitModVermeer( I(:,j), z, h );
+    muHat(:,j) = muFitModVermeer( I(:,j), z, f, h );
   end
   muHat = max( muHat, 0 );
   muHat( ~isfinite(muHat) ) = 0;
