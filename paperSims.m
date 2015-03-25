@@ -105,8 +105,7 @@ function paperSims
   simMus{1} = [1,2];
   simThicks{1} = [1];
 
-  %zRs = [0.027, 0.1059, 0.2384] * 2 * 1.37;   % n = 1.37
-zRs = [0.027, 0.1059, 0.2384] * 2;   % n = 1.37
+  zRs = [0.05, 0.1059, 0.2384] * 2 * 1.37;   % n = 1.37
 
   for i=1:numel(zRs)
     disp(['Working on i=', num2str(i), ' of ', num2str(numel(zRs)) ]);
