@@ -15,7 +15,7 @@ function paperSims
   N = 100;
   simIndx = 0;
 
-  [lambda,deltaLambda,dLambda] = getTelestoFalloffParams();
+  %[lambda,deltaLambda,dLambda] = getTelestoFalloffParams();
 
 
   %%  Changing Focal Plane
@@ -37,8 +37,7 @@ function paperSims
           ', j=', num2str(j) ]);
 
         [I, z, z0, zR, muAlpha, muBeta, muL0, trueMu] = makePhantom2D( ...
-          N,-1,lambda, deltaLambda, dLambda,z0,noiseProportion,...
-          simMus{i},simThicks{j});
+          N,-1,z0,noiseProportion,simMus{i},simThicks{j});
         dz = z(2) - z(1);
         dx = dz;
 
@@ -46,9 +45,8 @@ function paperSims
         thickStrings{end+1} = num2str( max(z) - sum(simThicks{j}) );
         thickString = strjoin( thickStrings, '_' );
 
-        simIndx = evalCodes( simIndx, I, z, z0, zR, lambda, ...
-          deltaLambda, dLambda, fid, outDir, z0, muString, thickString, ...
-          noiseProportion, trueMu );
+        simIndx = evalCodes( simIndx, I, z, z0, zR, fid, outDir, z0, ...
+          muString, thickString, noiseProportion, trueMu );
 
       end
     end
@@ -81,8 +79,7 @@ function paperSims
         ', j=', num2str(j) ]);
 
       [I, z, z0, zR, muAlpha, muBeta, muL0, trueMu] = makePhantom2D( ...
-        N,-1,lambda, deltaLambda, dLambda,z0,noiseProportion,...
-        simMus{i},simThicks{j});
+        N, -1, z0, noiseProportion, simMus{i}, simThicks{j} );
       dz = z(2) - z(1);
       dx = dz;
 
@@ -90,9 +87,8 @@ function paperSims
       thickStrings{end+1} = num2str( max(z) - sum(simThicks{j}) );
       thickString = strjoin( thickStrings, '_' );
 
-      simIndx = evalCodes( simIndx, I, z, z0, zR, lambda, ...
-        deltaLambda, dLambda, fid, outDir, z0, muString, thickString, ...
-        noiseProportion, trueMu );
+      simIndx = evalCodes( simIndx, I, z, z0, zR, fid, outDir, z0, ...
+        muString, thickString, noiseProportion, trueMu );
 
     end
   end
@@ -109,18 +105,18 @@ function paperSims
   simMus{1} = [1,2];
   simThicks{1} = [1];
 
-  zRs = [0.027, 0.1059, 0.2384] * 2 * 1.37;   % n = 1.37
+  %zRs = [0.027, 0.1059, 0.2384] * 2 * 1.37;   % n = 1.37
+zRs = [0.027, 0.1059, 0.2384] * 2;   % n = 1.37
 
   for i=1:numel(zRs)
     disp(['Working on i=', num2str(i), ' of ', num2str(numel(zRs)) ]);
     for j=1:numel(simMus)
 
-      muStrings = strtrim(cellstr(num2str(simMus{i}'))');
+      muStrings = strtrim(cellstr(num2str(simMus{j}'))');
       muString = strjoin( muStrings, '_' );
 
       [I, z, z0, zR, muAlpha, muBeta, muL0, trueMu] = makePhantom2D( ...
-            N,-1,lambda, deltaLambda, dLambda,z0_true,noiseProportion,...
-            simMus{i},[1],zRs(j));
+            N, -1, z0_true, noiseProportion, simMus{j}, [1], zRs(i) );
       dz = z(2) - z(1);
       dx = dz;
 
@@ -129,9 +125,8 @@ function paperSims
       thickString = strjoin( thickStrings, '_' );
 
       for z0=z0_true-0.1:0.01:z0_true+0.1;
-        simIndx = evalCodes( simIndx, I, z, z0, zR, lambda, deltaLambda, ...
-          dLambda, fid, outDir, z0_true, muString, thickString, ...
-          noiseProportion, trueMu );
+        simIndx = evalCodes( simIndx, I, z, z0, zR, fid, outDir, ...
+          z0_true, muString, thickString, noiseProportion, trueMu );
       end
     end
   end
@@ -160,14 +155,12 @@ function paperSims
         num2str(noiseProportion) ]);
 
       [I, z, z0, zR, muAlpha, muBeta, muL0, trueMu] = makePhantom2D( ...
-        N, -1, lambda, deltaLambda, dLambda, z0, noiseProportion, ...
-        simMus{i}, [1] );
+        N, -1, z0, noiseProportion, simMus{i}, [1] );
       dz = z(2) - z(1);
       dx = dz;
 
-      simIndx = evalCodes( simIndx, I, z, z0, zR, lambda, deltaLambda, ...
-        dLambda, fid, outDir, z0, muString, thickString, ...
-        noiseProportion, trueMu );
+      simIndx = evalCodes( simIndx, I, z, z0, zR, fid, outDir, z0, ...
+        muString, thickString, noiseProportion, trueMu );
     end
   end
   clear simMus;
@@ -179,9 +172,8 @@ end
 
 
 %% Support functions
-function simIndx_out = evalCodes( simIndx, I, z, z0, zR, lambda, ...
-  deltaLambda, dLambda, fid, outDir, z0_true, muString, thickString, ...
-  noiseProportion, trueMu )
+function simIndx_out = evalCodes( simIndx, I, z, z0, zR, fid, outDir, ...
+  z0_true, muString, thickString, noiseProportion, trueMu )
 
   mask = ones( size(I) );
 
@@ -201,7 +193,7 @@ function simIndx_out = evalCodes( simIndx, I, z, z0, zR, lambda, ...
   timeTaken = toc;
   [meanEtbDepth, meanVDepth] = findErrorMetrics(muFit_Ver,trueMu,z);
   filename = ['sim_', num2str(simIndx,'%5.5i'),'.mat'];
-  save( [outDir,'/',filename], 'muFit_Ver' );
+  %save( [outDir,'/',filename], 'muFit_Ver' );
   fprintf( fid, [filename, ', Vermeer, %8.3f, %8.3f, %8.3f, ', muString, ...
         ', ', thickString, ', %5.2e, %8.3f, %8.3f, %16.11f\n'], ...
         z0, z0_true, zR, noiseProportion, meanEtbDepth, meanVDepth, ...
@@ -209,11 +201,11 @@ function simIndx_out = evalCodes( simIndx, I, z, z0, zR, lambda, ...
   simIndx = simIndx + 1;
 
   tic;
-  muFit_mVer = muFit2D_mVer( I, z, z0, zR, lambda, deltaLambda, dLambda );
+  muFit_mVer = muFit2D_mVer( I, z, z0, zR );
   timeTaken = toc;
   [meanEtbDepth, meanVDepth] = findErrorMetrics(muFit_mVer,trueMu,z);
   filename = ['sim_', num2str(simIndx,'%5.5i'),'.mat'];
-  save( [outDir,'/',filename], 'muFit_mVer' );
+  %save( [outDir,'/',filename], 'muFit_mVer' );
   fprintf( fid, [filename, ', MVM, %8.3f, %8.3f, %8.3f, ', muString, ...
         ', ', thickString, ', %5.2e, %8.3f, %8.3f, %16.11f\n'], ...
         z0, z0_true, zR, noiseProportion, meanEtbDepth, meanVDepth, ...
@@ -221,12 +213,11 @@ function simIndx_out = evalCodes( simIndx, I, z, z0, zR, lambda, ...
   simIndx = simIndx + 1;
 
   tic;
-  muFit_gBlur = muFit2D_mVer_gBlur( I, z, z0, zR, lambda, ...
-    deltaLambda, dLambda );
+  muFit_gBlur = muFit2D_mVer_gBlur( I, z, z0, zR );
   timeTaken = toc;
   [meanEtbDepth, meanVDepth] = findErrorMetrics(muFit_gBlur,trueMu,z);
   filename = ['sim_', num2str(simIndx,'%5.5i'),'.mat'];
-  save( [outDir,'/',filename], 'muFit_gBlur' );
+  %save( [outDir,'/',filename], 'muFit_gBlur' );
   fprintf( fid, [filename, ', gBlur, %8.3f, %8.3f, %8.3f, ', muString, ...
         ', ', thickString, ', %5.2e, %8.3f, %8.3f, %16.11f\n'], ...
         z0, z0_true, zR, noiseProportion, meanEtbDepth, meanVDepth, ...
@@ -234,11 +225,11 @@ function simIndx_out = evalCodes( simIndx, I, z, z0, zR, lambda, ...
   simIndx = simIndx + 1;
 
   tic;
-  muFit_TV = muFit2D_TV( I, z, z0, zR, lambda, deltaLambda, dLambda );
+  muFit_TV = muFit2D_TV( I, z, z0, zR );
   timeTaken = toc;
   [meanEtbDepth, meanVDepth] = findErrorMetrics(muFit_TV,trueMu,z);
   filename = ['sim_', num2str(simIndx,'%5.5i'),'.mat'];
-  save( [outDir,'/',filename], 'muFit_TV' );
+  %save( [outDir,'/',filename], 'muFit_TV' );
   fprintf( fid, [filename, ', TV, %8.3f, %8.3f, %8.3f, ', muString, ...
         ', ', thickString, ', %5.2e, %8.3f, %8.3f, %16.11f\n'], ...
         z0, z0_true, zR, noiseProportion, meanEtbDepth, meanVDepth, ...
@@ -246,12 +237,12 @@ function simIndx_out = evalCodes( simIndx, I, z, z0, zR, lambda, ...
   simIndx = simIndx + 1;
 
   tic;
-  muFit_whTV = muFit2D_whTV( I, z, z0, zR, mask, lambda, deltaLambda, ...
-    dLambda );
+  %muFit_whTV = muFit2D_whTV( I, z, z0, zR, mask );
+  muFit_whTV = muFit_TV;
   timeTaken = toc;
   [meanEtbDepth, meanVDepth] = findErrorMetrics(muFit_whTV,trueMu,z);
   filename = ['sim_', num2str(simIndx,'%5.5i'),'.mat'];
-  save( [outDir,'/',filename], 'muFit_whTV' );
+  %save( [outDir,'/',filename], 'muFit_whTV' );
   fprintf( fid, [filename, ', whTV, %8.3f, %8.3f, %8.3f, ', muString, ...
         ', ', thickString, ', %5.2e, %8.3f, %8.3f, %16.11f\n'], ...
         z0, z0_true, zR, noiseProportion, meanEtbDepth, meanVDepth, ...

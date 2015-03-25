@@ -10,7 +10,8 @@ function [I, z, z0, zR, alpha, beta, L0, trueMu] = makePhantom( varargin )
   defaultNoiseProportion = 1d-5;
   defaultMuValues = [ 0.5 1 4 2 ];
   defaultMuThicks = [ 0.4 0.8 0.3 ];
-  defaultZR = 0.1059 * 2 * 1.37;
+  %defaultZR = 0.1059 * 2 * 1.37;
+defaultZR = 0.1059 * 2;
   p = inputParser;
   p.addOptional( 'phantomType', defaultPhantomType, @isnumeric );
   p.addOptional( 'z0', defaultZ0, @isnumeric );
