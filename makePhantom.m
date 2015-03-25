@@ -21,12 +21,6 @@ defaultZR = 0.1059 * 2;
   p.addOptional( 'zR', defaultZR, @isnumeric );
   p.parse(varargin{:});
   phantomType = p.Results.phantomType;
-  z0 = p.Results.z0;
-  noiseProportion = p.Results.noiseProportion;
-  muValues = p.Results.muValues;
-  muThicks = p.Results.muThicks;
-  zR = p.Results.zR;
-
 
   switch phantomType
     case 0   % Uniform phantom
@@ -87,6 +81,6 @@ defaultZR = 0.1059 * 2;
 
   noise = noiseProportion * L0 * randn( numel(I), 1 );
   I = I + noise;
-  I = max( I, 0 );
+  %I = max( I, 0 );
 
 end
