@@ -236,8 +236,7 @@ function simIndx_out = evalCodes( simIndx, I, z, z0, zR, fid, outDir, ...
   simIndx = simIndx + 1;
 
   tic;
-  %muFit_whTV = muFit2D_whTV( I, z, z0, zR, mask );
-  muFit_whTV = muFit_TV;
+  muFit_whTV = muFit2D_whTV( I, z, z0, zR, mask );
   timeTaken = toc;
   [meanEtbDepth, meanVDepth] = findErrorMetrics(muFit_whTV,trueMu,z);
   filename = ['sim_', num2str(simIndx,'%5.5i'),'.mat'];
@@ -247,7 +246,7 @@ function simIndx_out = evalCodes( simIndx, I, z, z0, zR, fid, outDir, ...
         z0, z0_true, zR, noiseProportion, meanEtbDepth, meanVDepth, ...
         timeTaken );
   simIndx = simIndx + 1;
-  
+
   simIndx_out = simIndx;
 end
 
