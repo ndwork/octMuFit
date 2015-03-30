@@ -2,13 +2,14 @@
 function muFit = muFit2D_whTV( I, z, z0, zR, mask )
 
   eta = 50;
+  k = 3;
   epsilon = 1d-1;
 
   [M, N] = size( I );
 
   muHat = muFit2D_mVer( I, z, z0, zR );
 
-  weight = 1 ./ ( I + epsilon );
+  weight = 1 ./ ( I*k + epsilon );
 
   Dx = -eye(N);
   for i=1:N-1
