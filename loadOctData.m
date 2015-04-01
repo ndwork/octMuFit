@@ -11,7 +11,7 @@ function [I, z, dx, z0, zR, alpha, beta, L0, lambda, deltaLambda, ...
   alpha = [];
   beta = [];
   L0 = [];
-  
+
   ALA = true;
 
   [lambda,deltaLambda,dLambda] = getTelestoFalloffParams();
@@ -20,8 +20,7 @@ function [I, z, dx, z0, zR, alpha, beta, L0, lambda, deltaLambda, ...
       case 0
           N = 100;
           dx = 13d-3;
-          [I,z,z0,zR,alpha,beta,L0,trueMu] = makePhantom2D(N,1, ...
-            lambda, deltaLambda, dLambda );
+          [I,z,z0,zR,alpha,beta,L0,trueMu] = makePhantom2D(N,1);
           alpha_R = 2;
           n = 1.37;
           return
@@ -316,8 +315,6 @@ function [I, z, dx, z0, zR, alpha, beta, L0, lambda, deltaLambda, ...
     trueMu(rows2Del, :) = [];
     trueMu(:,cols2Del) = [];
   end
-
-  [lambda,deltaLambda,dLambda] = getTelestoFalloffParams()
 
   if dataCase ~= 0
     I = I ./ 55743;     % Divide by this amount to make consistent with

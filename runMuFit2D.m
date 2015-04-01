@@ -5,10 +5,10 @@ function runMuFit2D
 
   muAlpha = 0;    % Note, if we know true value than problem is better
 
-  %dataCase = 16;
-  dataCase = 0;   % Simulation
-  [I, z, dx, z0, zR, muAlpha, muBeta, muL0, lambda, deltaLambda, ...
-    dLambda, ALA, trueMu ] = loadOctData( dataCase, false );
+  dataCase = 5;
+  %dataCase = 0;   % Simulation
+  [I, z, dx, z0, zR, muAlpha, muBeta, muL0, ALA, trueMu ] = ...
+    loadOctData( dataCase, false );
 
   if dataCase == 0
     mask = ones( size(I) );
@@ -38,10 +38,10 @@ function runMuFit2D
   %muFit = muFit2D_ver( I, z );
   %muFit_mVer = muFit2D_mVer( I, z, z0, zR ); muFit = muFit_mVer;
   %muFit = muFit2D_TV( I, z, z0, zR );
-  %muFit = muFit2D_whTV( I, z, z0, zR, mask );
+  muFit = muFit2D_whTV( I, z, z0, zR, mask );
   %muFit = weightedTvDenoise_CP( muFit_mVer, paramsCP );
   %muFit = muFit2D_vReg( I, z, z0, zR, mask );
-  muFit = muFit2D_mVer_gBlur( I, z, z0, zR );
+  %muFit = muFit2D_mVer_gBlur( I, z, z0, zR );
   timeTaken = toc;
   %profile off;
   disp(['Time taken (s):', num2str(timeTaken)]);
@@ -77,7 +77,7 @@ function runMuFit2D
     disp(['Min Mu for all cols: ', num2str(min(avgMus)) ]);
   end
 
-  figure, imshow( muFit, [0 5.0] );
+  figure, imshow( muFit, [0 3.0] );
 
   if dataCase == 0
     figure; plot( z, trueMu, 'k' ); ylim([0 5]);

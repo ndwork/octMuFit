@@ -56,7 +56,7 @@ function [I, z, z0, zR, alpha, beta, L0, trueMu] = makePhantom( varargin )
 
   alpha = 0.2;
   beta = 1.0;
-  L0 = 2000;
+  L0 = 50;
 
   maxZ = 2;
   dz = 10d-3;
