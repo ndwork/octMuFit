@@ -5,7 +5,7 @@ function muFit = muFit2D_mVer( I, z, z0, zR )
   muFit = zeros( M, N );
 
   h = makeConfocalFunction( z, z0, zR );
-  %f = makeFalloffFunction( z, lambda, deltaLambda, dLambda );
+
   for j=1:N
     line = I(:,j);
     muFit(:,j) = muFitModVermeer( line, z, h );

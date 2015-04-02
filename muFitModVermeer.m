@@ -2,7 +2,12 @@
 function mu = muFitModVermeer( I, z, h )
 
   dz = z(2) - z(1);
-  term = I./h;
+
+  %term = I ./ h;
+
+  f = 1 ./ h .* ( I.*I ./ (I.*I + (1d-3)^2 ) );
+  term = I .* f;
+
   integral = zeros(size(term));
   nZ = numel(z);
   for m = 1:(nZ - 1)
