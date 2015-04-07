@@ -5,10 +5,10 @@ function runMuFit2D
 
   muAlpha = 0;    % Note, if we know true value than problem is better
 
-  dataCase = 5;
+  dataCase = 9;
   %dataCase = 0;   % Simulation
-  [I, z, dx, z0, zR, muAlpha, muBeta, muL0, ALA, trueMu ] = ...
-    loadOctData( dataCase, false );
+  [I, z, dx, z0, zR, muAlpha, muBeta, muL0, lambda, deltaLambda, ...
+    dLambda, ALA, trueMu ] = loadOctData( dataCase, false );
 
   if dataCase == 0
     mask = ones( size(I) );
@@ -18,28 +18,17 @@ function runMuFit2D
     noiseLevel = median( I( mask==0 ) );
   end
 
-  I = max( I - noiseLevel, 0 );
+  I = I - noiseLevel;
   I = I .* mask;
-
-  %TV Parameters
-  maxIter = 1000;
-  tau = .02;  % Actually, the CP codes choose step sizes tau = sigma = 1/nrmK.
-  overRelax = 1.9;
-  epsilon = 1d-1;
-  weight = 1 ./ ( I + epsilon );
-  gamma = .2*weight;
-  showTrigger = pi;  %by making irrational, never shows
-  paramsCP = struct('gamma',gamma,'tau',tau,'maxIter',maxIter,...
-            'showTrigger',showTrigger,'theta',1,'overRelax',overRelax);
 
   %profile clear;
   %profile on;
   tic;
   %muFit = muFit2D_ver( I, z );
-  %muFit_mVer = muFit2D_mVer( I, z, z0, zR ); muFit = muFit_mVer;
+  %muFit = muFit2D_mVer( I, z, z0, zR );
+  %muFit = muFit2D_DRC( I, z, z0, zR );
   %muFit = muFit2D_TV( I, z, z0, zR );
   muFit = muFit2D_whTV( I, z, z0, zR, mask );
-  %muFit = weightedTvDenoise_CP( muFit_mVer, paramsCP );
   %muFit = muFit2D_vReg( I, z, z0, zR, mask );
   %muFit = muFit2D_mVer_gBlur( I, z, z0, zR );
   timeTaken = toc;
@@ -79,9 +68,12 @@ function runMuFit2D
 
   figure, imshow( muFit, [0 3.0] );
 
+%load 'muFit_whTV.mat';  figure;  imshow( muFit_whTV, [0 3] ); title('muFit_whTV');
+
   if dataCase == 0
-    figure; plot( z, trueMu, 'k' ); ylim([0 5]);
-    hold on; plot( z, muFit, 'b' );
+    figure; plot( z, trueMu(:,50), 'k' ); ylim([0 5]);
+    hold on; plot( z, muFit(:,50), 'b' );
+%hold on; plot( z, muFit_whTV(:,50), 'r' );
     [meanEtbDepth, meanVDepth] = findErrorMetrics(muFit,trueMu,z);
     disp(['Mean ETB Depth: ', num2str(meanEtbDepth)]);
     disp(['Mean V Depth: ', num2str(meanVDepth)]);
