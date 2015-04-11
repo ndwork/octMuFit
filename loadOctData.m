@@ -12,6 +12,8 @@ function [I, z, dx, z0, zR, alpha, beta, L0, lambda, deltaLambda, ...
   beta = [];
   L0 = [];
 
+  fileIndx=1;
+  
   ALA = true;
 
   [lambda,deltaLambda,dLambda] = getTelestoFalloffParams();
@@ -20,7 +22,7 @@ function [I, z, dx, z0, zR, alpha, beta, L0, lambda, deltaLambda, ...
       case 0
           N = 100;
           dx = 13d-3;
-          [I,z,z0,zR,alpha,beta,L0,trueMu] = makePhantom2D(N,1);
+          [I,z,z0,zR,alpha,beta,L0,trueMu] = makePhantom2D(N,5);
           alpha_R = 2;
           n = 1.37;
           return
@@ -156,6 +158,7 @@ function [I, z, dx, z0, zR, alpha, beta, L0, lambda, deltaLambda, ...
           averageFiles = 0;
           alpha_R = 2;
           n = 1.353;
+          fileIndx = 1;
       case 12 % Intralipid 2.5
           %z0 = 0.65;
           zR = 0.1059;
@@ -170,6 +173,7 @@ function [I, z, dx, z0, zR, alpha, beta, L0, lambda, deltaLambda, ...
           averageFiles = 0;
           alpha_R = 2;
           n = 1.353;
+          fileIndx = 1;
       case 13 % Intralipid 5
           %z0 = 0.65;
           zR = 0.1059;
@@ -184,31 +188,34 @@ function [I, z, dx, z0, zR, alpha, beta, L0, lambda, deltaLambda, ...
           averageFiles = 0;
           alpha_R = 2;
           n = 1.353;
+          fileIndx = 1;
       case 14 % Intralipid 10
           %z0 = 0.65;
           zR = 0.1059;
           dx = 0.00502;
           imgDepth = 2.57;
           numPix = 512;
-          datafileParts = {'..', '20140501', 'IntralipidPhantoms', '10', '1avg'};
-          %datafileParts = {'..', '20140519', 'Intralipid', '10', '1avg'};
+          %datafileParts = {'..', '20140501', 'IntralipidPhantoms', '10', '1avg'};
+          datafileParts = {'..', '20140519', 'Intralipid', '10', '1avg'};
           z0 = 1.6;
-          cols2Del = [1:100];
-          rows2Del = [301:numPix];
+          %cols2Del = [1:100];
+          cols2Del = [];
+          rows2Del = [401:numPix];
           averageFiles = 0;
           alpha_R = 2;
           n = 1.353;
+          fileIndx = 3;
       case 15 % Intralipid 15
           %z0 = 0.7;
           zR = 0.1059;
           dx = 0.00502;
           imgDepth = 2.57;
           numPix = 512;
-          datafileParts = {'..', '20140501', 'IntralipidPhantoms', '15', '1avg' };
-          %datafileParts = {'..', '20140519', 'Intralipid', '15', '1avg' };
+          %datafileParts = {'..', '20140501', 'IntralipidPhantoms', '15', '1avg' };
+          datafileParts = {'..', '20140519', 'Intralipid', '15', '1avg' };
           z0 = 1.6;
-          cols2Del = [1:100];
-          rows2Del = [301:numPix];
+          cols2Del = [];
+          rows2Del = [401:numPix];
           averageFiles = 0;
           alpha_R = 2;
           n = 1.353;
@@ -218,8 +225,8 @@ function [I, z, dx, z0, zR, alpha, beta, L0, lambda, deltaLambda, ...
           dx = 0.00502;
           imgDepth = 2.57;
           numPix = 512;
-          datafileParts = {'..', '20140501', 'IntralipidPhantoms', '20', '1avg'};
-          %datafileParts = {'..', '20140519', 'Intralipid', '20', '1avg'};
+          %datafileParts = {'..', '20140501', 'IntralipidPhantoms', '20', '1avg'};
+          datafileParts = {'..', '20140519', 'Intralipid', '20', '1avg'};
           z0 = 1.6;
           cols2Del = [1:100];
           rows2Del = [301:numPix];
@@ -258,12 +265,16 @@ function [I, z, dx, z0, zR, alpha, beta, L0, lambda, deltaLambda, ...
   Isum = zeros(numPix);
   numSamps = 0;
 
+  thisFileIndx = 0;
   if(averageFiles)
     for i = 1:length(filenames)
       datafile = strcat(dataDir, filenames(i).name);
       [pathstr, name, ext] = fileparts(datafile);
       if(~strcmp(ext, '.raw'))  %If the file is not *.raw then skip
         continue;
+      else
+        thisFileIndx = thisFileIndx+1;
+        if thisFileIndx ~= fileIndx, continue; end;
       end
       
       [interf,info] = getInterferograms(datafile,options);
@@ -294,14 +305,18 @@ function [I, z, dx, z0, zR, alpha, beta, L0, lambda, deltaLambda, ...
       if(~strcmp(ext, '.raw'))  %If the file is not *.raw then skip
         continue;
       else
-        break;
+        thisFileIndx = thisFileIndx+1;
+        if thisFileIndx ~= fileIndx
+          continue;
+        else
+          break;
+        end;
       end
     end
     [interf,info] = getInterferograms(datafile,options);
     bscans = getBScans(interf);
     I = 10.^(bscans./20); % Convert from db
   end
-
 
   I(rows2Del, :) = [];
   z(rows2Del, :) = [];
@@ -319,7 +334,7 @@ function [I, z, dx, z0, zR, alpha, beta, L0, lambda, deltaLambda, ...
   if dataCase ~= 0
     I = I ./ 55743;     % Divide by this amount to make consistent with
                         % theoretical falloff function
-    zR = alpha_R*n*zR;  % Multiply by alpha and n to convert from zR 
+    zR = alpha_R*n*zR;  % Multiply by alpha and n to convert from zR
                         % to apparent zR. See Faber paper for more details
   end
 

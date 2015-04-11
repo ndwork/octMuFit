@@ -7,7 +7,7 @@ function [I, z, z0, zR, alpha, beta, L0, trueMu] = makePhantom( varargin )
   defaultPhantomType = 1;
 
   defaultZ0 = 0.5;
-  defaultNoiseProportion = 6d-6;
+  defaultNoiseProportion = 1d-5;
   defaultMuValues = [ 0.5 1 4 2 ];
   defaultMuThicks = [ 0.4 0.8 0.3 ];
   defaultZR = 0.1059 * 2 * 1.37;
@@ -59,7 +59,7 @@ function [I, z, z0, zR, alpha, beta, L0, trueMu] = makePhantom( varargin )
 
   alpha = 0.2;
   beta = 1.0;
-  L0 = 50;
+  L0 = 500;
 
   maxZ = 2;
   dz = 10d-3;
@@ -82,7 +82,7 @@ function [I, z, z0, zR, alpha, beta, L0, trueMu] = makePhantom( varargin )
   I = mu2I( trueMu, z, z0, zR, alpha, beta, L0 );
 
   noise = noiseProportion * L0 * randn( numel(I), 1 );
-  I = I + noise;
+  I = I + noise + 0.001;
   %I = max( I, 0 );
 
 end

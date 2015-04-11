@@ -1,5 +1,10 @@
 
-function mu = muFitDRC( I, z, h )
+function mu = muFitDRC( I_in, z_in, h_in )
+
+  goodIndx = find( I_in ~= 0, 1, 'first' );
+  I = I_in(goodIndx:end);
+  z = z_in(goodIndx:end);
+  h = h_in(goodIndx:end);
 
   dz = z(2) - z(1);
   Ihat = I ./ h;
@@ -21,9 +26,13 @@ function mu = muFitDRC( I, z, h )
   b = [ b; 0 ];
   A(end,:) = [ zeros(1,M-1) 1 -1 ];
 
-  x = A \ b;
+  %x = A \ b;
+  pinvA = pinv(A);
+  x = pinvA * b;
   muInv = x(2:end);
-  mu = 1 ./ muInv;
+  mu = zeros( size( I_in ) );
+  mu(goodIndx:end) = 1 ./ muInv;
+  %mu = 1 ./ x(2:end);
   mu( ~isfinite(mu) ) = 0;
 end
 

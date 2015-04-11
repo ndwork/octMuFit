@@ -5,7 +5,7 @@ function runMuFit2D
 
   muAlpha = 0;    % Note, if we know true value than problem is better
 
-  dataCase = 9;
+  dataCase = 16;
   %dataCase = 0;   % Simulation
   [I, z, dx, z0, zR, muAlpha, muBeta, muL0, lambda, deltaLambda, ...
     dLambda, ALA, trueMu ] = loadOctData( dataCase, false );
@@ -18,17 +18,18 @@ function runMuFit2D
     noiseLevel = median( I( mask==0 ) );
   end
 
-  I = I - noiseLevel;
+  %I = I - noiseLevel;
+  %I = max( I, 0 );
   I = I .* mask;
 
   %profile clear;
   %profile on;
   tic;
   %muFit = muFit2D_ver( I, z );
-  %muFit = muFit2D_mVer( I, z, z0, zR );
+  muFit = muFit2D_mVer( I, z, z0, zR );
   %muFit = muFit2D_DRC( I, z, z0, zR );
   %muFit = muFit2D_TV( I, z, z0, zR );
-  muFit = muFit2D_whTV( I, z, z0, zR, mask );
+  %muFit = muFit2D_whTV( I, z, z0, zR, mask );
   %muFit = muFit2D_vReg( I, z, z0, zR, mask );
   %muFit = muFit2D_mVer_gBlur( I, z, z0, zR );
   timeTaken = toc;
@@ -68,12 +69,9 @@ function runMuFit2D
 
   figure, imshow( muFit, [0 3.0] );
 
-%load 'muFit_whTV.mat';  figure;  imshow( muFit_whTV, [0 3] ); title('muFit_whTV');
-
   if dataCase == 0
     figure; plot( z, trueMu(:,50), 'k' ); ylim([0 5]);
     hold on; plot( z, muFit(:,50), 'b' );
-%hold on; plot( z, muFit_whTV(:,50), 'r' );
     [meanEtbDepth, meanVDepth] = findErrorMetrics(muFit,trueMu,z);
     disp(['Mean ETB Depth: ', num2str(meanEtbDepth)]);
     disp(['Mean V Depth: ', num2str(meanVDepth)]);

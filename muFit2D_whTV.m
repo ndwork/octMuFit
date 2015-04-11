@@ -1,7 +1,7 @@
 
 function muFit = muFit2D_whTV( I, z, z0, zR, mask )
 
-  eta = 2;    % good value
+  eta = 3;    % good value
   epsilon = 1d-3;
 
   [M, N] = size( I );
@@ -32,12 +32,13 @@ function muFit = muFit2D_whTV( I, z, z0, zR, mask )
 
       Nx = sum(maskRow);
 
+      wmRow = muHatRow .* weightRow;
       cvx_begin quiet
         variable muRow(N,1)
         minimize 0.5 * sum(( muRow - muHatRow ).^2) + ...
-          eta/Nx * norm( weightRow .* maskRow .* ( Dx * muRow ), 1 )
+          eta/Nx * norm( wmRow .* ( Dx * muRow ), 1 )
         %minimize 0.5 * norm( muRow - muHatRow, 1 ) + ...
-        %  eta/Nx * norm( weightRow .* maskRow .* ( Dx * muRow ), 1 )
+        %  eta/Nx * norm( wmRow .* ( Dx * muRow ), 1 )
         subject to
           muRow >= 0
       cvx_end

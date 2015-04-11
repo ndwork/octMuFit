@@ -7,10 +7,11 @@ function muFit = muFit2D_mVer( I, z, z0, zR )
   h = makeConfocalFunction( z, z0, zR );
 
   for j=1:N
+%for j=495:495
+%for j=100:100
     line = I(:,j);
     muFit(:,j) = muFitModVermeer( line, z, h );
   end
 
-  muFit = max( muFit, 0 );
-  muFit( ~isfinite(muFit) ) = 0;
 end
+
