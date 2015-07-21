@@ -28,10 +28,10 @@ function runMuFit2D
   %muFit = muFit2D_ver( I, z );
   muFit = muFit2D_mVer( I, z, z0, zR );
   %muFit = muFit2D_DRC( I, z, z0, zR );
+  %muFit = muFit2D_mVer_gBlur( I, z, z0, zR );
   %muFit = muFit2D_TV( I, z, z0, zR );
   %muFit = muFit2D_whTV( I, z, z0, zR, mask );
   %muFit = muFit2D_vReg( I, z, z0, zR, mask );
-  %muFit = muFit2D_mVer_gBlur( I, z, z0, zR );
   timeTaken = toc;
   %profile off;
   disp(['Time taken (s):', num2str(timeTaken)]);

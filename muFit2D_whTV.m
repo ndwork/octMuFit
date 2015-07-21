@@ -1,7 +1,7 @@
 
 function muFit = muFit2D_whTV( I, z, z0, zR, mask )
 
-  eta = 3;    % good value
+  eta = 6;    % good value
   epsilon = 1d-3;
 
   [M, N] = size( I );
